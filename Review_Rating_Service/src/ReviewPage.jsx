@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ReviewForm from "./ReviewForm";
 
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // to read the env file
+
 const ReviewPage = () => {
     const [reviews, setReviews] = useState([]);
 
     const fetchReviews = async () => {
         try {
-            const response = await axios.get("http://localhost:5050/api/reviews");
+            // const response = await axios.get("http://localhost:5050/api/reviews");
+            const response = await axios.get(`${API_BASE_URL}/api/reviews`);
             setReviews(response.data);
         } catch (error) {
             console.error("Error fetching reviews:", error);
@@ -18,7 +22,8 @@ const ReviewPage = () => {
         console.log("Received new review:", newReview);  
     
         try {
-            const response = await axios.post("http://localhost:5050/api/reviews", newReview);
+            // const response = await axios.post("http://localhost:5050/api/reviews", newReview);
+            const response = await axios.post(`${API_BASE_URL}/api/reviews`, newReview);
             console.log("Review submitted:", response.data);  
             fetchReviews();  
         } catch (error) {
