@@ -22,10 +22,10 @@ function Gigs() {
   return (
     <div className="gigs">
       <div className="container">
-        <span className="breadcrumbs">Liverr > Graphics & Design ></span>
-        <h1>AI Artists</h1>
+        <span className="breadcrumbs">CeylonFlair > Jewelry & Accessories > </span>
+        <h1>Jewelry</h1>
         <p>
-          Explore the boundaries of art and technology with Liverr's AI artists
+          Handcrafted elegance, made in Sri Lanka.
         </p>
         <div className="menu">
           <div className="left">
