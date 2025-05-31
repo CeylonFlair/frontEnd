@@ -4,17 +4,21 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import SignIn from './SignIn.jsx';
 import Register from './SignUp.jsx';
+import PaymentForm from './PaymentForm.jsx';
+import PaymentSuccess from './PaymentSuccess.jsx';
+import PaymentCancel from './PaymentCancel.jsx';
 
 function App() {
   return (
     <>
-      {/* <SignIn />
-      <Register /> */}
       <Router>
         <Routes>
           <Route path="/" element={<Register />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/payment" element={<PaymentForm />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
+          <Route path="/payment/cancel" element={<PaymentCancel />} />
         </Routes>
       </Router>
     </>
