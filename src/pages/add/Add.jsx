@@ -5,7 +5,7 @@ const Add = () => {
   return (
     <div className="add">
       <div className="container">
-        <h1>Add New Gig</h1>
+        <h1>Add New Service</h1>
         <div className="sections">
           <div className="info">
             <label htmlFor="">Title</label>
@@ -13,12 +13,27 @@ const Add = () => {
               type="text"
               placeholder="e.g. I will do something I'm really good at"
             />
+
+            {/* Handicraft Artwork
+Textile Creation
+Home Decor
+Jewelry & Accessories
+Wellness & Beauty
+Traditional Instruments
+Ceremonial Arts
+Educational Services */}
+
+
             <label htmlFor="">Category</label>
             <select name="cats" id="cats">
-              <option value="design">Design</option>
-              <option value="web">Web Development</option>
-              <option value="animation">Animation</option>
-              <option value="music">Music</option>
+              <option value="design">Handicraft Artwork</option>
+              <option value="web">Textile Creation</option>
+              <option value="animation">Home Decor</option>
+              <option value="music">Wellness & Beauty</option>
+              <option value="web">Traditional Instruments</option>
+              <option value="animation">Ceremonial Arts</option>
+              <option value="music">Educational Services</option>
+
             </select>
             <label htmlFor="">Cover Image</label>
             <input type="file" />
@@ -30,7 +45,7 @@ const Add = () => {
           </div>
           <div className="details">
             <label htmlFor="">Service Title</label>
-            <input type="text" placeholder="e.g. One-page web design" />
+            <input type="text" placeholder="e.g. Handloom sarees" />
             <label htmlFor="">Short Description</label>
             <textarea name="" id="" placeholder="Short description of your service" cols="30" rows="10"></textarea>
             <label htmlFor="">Delivery Time (e.g. 3 days)</label>
@@ -38,10 +53,9 @@ const Add = () => {
             <label htmlFor="">Revision Number</label>
             <input type="number" />
             <label htmlFor="">Add Features</label>
-            <input type="text" placeholder="e.g. page design" />
-            <input type="text" placeholder="e.g. file uploading" />
-            <input type="text" placeholder="e.g. setting up a domain" />
-            <input type="text" placeholder="e.g. hosting" />
+            <input type="text" placeholder="e.g. customized colours" />
+            <input type="text" placeholder="e.g. customized designs and patterns" />
+            <input type="text" placeholder="e.g. saree jacket" />
             <label htmlFor="">Price</label>
             <input type="number" />
           </div>
