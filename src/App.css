@@ -135,14 +135,6 @@ body {
 }
 
 /* review-rating page style */
-
-/* #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-} */
-
 .review-form {
   position: absolute;
   left: 15%; 
@@ -174,3 +166,10 @@ body {
   text-align: center;
   width: 100%; 
 }
+
+.review-list1, .edit-review-form{
+  margin: 0 auto;
+  float: none;
+  position: static;
+}
+

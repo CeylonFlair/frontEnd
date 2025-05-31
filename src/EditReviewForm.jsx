@@ -11,7 +11,7 @@ const EditReviewForm = ({ review, onSubmit, onCancel }) => {
     };
 
     return (
-        <div className="review-form">
+        <div className="edit-review-form">
             <h2>Edit Your Review</h2>
             <form onSubmit={handleSubmit}>
                 <label>Write a Review</label>

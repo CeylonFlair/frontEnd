@@ -8,6 +8,8 @@ import PaymentForm from './PaymentForm.jsx';
 import PaymentSuccess from './PaymentSuccess.jsx';
 import PaymentCancel from './PaymentCancel.jsx';
 import ReviewPage from './ReviewPage.jsx';
+import ProviderReviewsPage from './ProviderReviewsPage.jsx';
+import OrderReviewPage from './OrderReviewPage.jsx';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/payment/cancel" element={<PaymentCancel />} />
           <Route path="/reviews/:listingId" element={<ReviewPage />} />
+          <Route path="/provider-reviews/:providerId" element={<ProviderReviewsPage />} />
+          <Route path="/order-review/:orderId" element={<OrderReviewPage />} />
         </Routes>
       </Router>
     </>
