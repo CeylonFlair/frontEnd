@@ -48,7 +48,12 @@ function Home() {
               <img src="./img/check.png" alt="" />
               Unlock exclusive seller tools, premium listing features, and seasonal marketing boosts
             </div>
-            <button>Join the Beta Program</button>
+            <button onClick={() => {
+  window.location.href = "mailto:info@ceylonflair.com?subject=Beta Program Inquiry&body=Hi CeylonFlair Team,%0D%0A%0D%0AI'd love to join the CeylonFlair Pro Beta Program. Please let me know the next steps.%0D%0A%0D%0AThanks!%0D%0A[Your Name]";
+}}>
+  Join the Beta Program
+</button>
+
           </div>
           <div className="item">
             <img
