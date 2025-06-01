@@ -6,13 +6,7 @@
     padding: 100px 0px;
 
     &.dark {
-          background: linear-gradient(
-    to right,
-    #ffffff 0%,       // deep top
-    #d9a8a8 30%,       // mid point soft pink
-    #8d4444 60%,       // lighter pink
-    #000000 100%       // white bottom
-  );
+          background-image: linear-gradient(to top, #bf7e7e 0%, #ffffff 100%);;
 
 
       h1 {

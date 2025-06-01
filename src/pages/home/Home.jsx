@@ -21,6 +21,14 @@ function Home() {
       
       <div className="features dark">
         <div className="container">
+          
+          <div className="item">
+            <img
+              src="../../../public/img/promotion.png"
+              alt=""
+            />
+          </div>
+
           <div className="item">
             <h1>
               Introducing <i>CeylonFlair Pro</i>
@@ -54,12 +62,6 @@ function Home() {
   Join the Beta Program
 </button>
 
-          </div>
-          <div className="item">
-            <img
-              src="../../../public/img/promotion.png"
-              alt=""
-            />
           </div>
         </div>
       </div>
