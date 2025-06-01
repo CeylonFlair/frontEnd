@@ -1,0 +1,107 @@
+.featured {
+
+
+  font-family: 'Raleway', sans-serif;
+  height: 700px;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(
+    to bottom,
+    #8d4444 0%,        // deep top
+    #a55959 30%,       // mid point soft pink
+    #d9a8a8 70%,       // lighter pink
+    #ffffff 100%       // white bottom
+  );
+  color:#000000;
+
+
+  .container {
+
+    width: 1400px;
+    display: flex;
+    align-items: center;
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      h1 {
+        font-size: 50px;
+
+        span {
+          font-style: italic;
+          font-weight: 300;
+        }
+      }
+
+      .search {
+        background-color: rgb(255, 255, 255);
+        border: 2px solid #d8adad;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+        
+        .searchInput {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          img {
+            width: 20px;
+            height: 20px;
+            margin: 10px;
+          }
+
+          input {
+            border: none;
+            outline: none;
+
+            &::placeholder {
+              color: gray;
+            }
+          }
+        }
+
+        button {
+          width: 120px;
+          height: 50px;
+          border: none;
+          background-color: #8d4444;
+          color: white;
+          align-self: flex-end;
+          cursor: pointer;
+        }
+      }
+
+      .popular {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        span {
+          width: max-content;
+        }
+
+        button {
+          width: max-content;
+          color: rgb(69, 3, 3);
+          border: 1px solid rgb(100, 19, 19);
+          padding: 5px 10px;
+          border-radius: 20px;
+          background-color: transparent;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .right {
+      height: 100%;
+      img {
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+}
