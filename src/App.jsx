@@ -19,6 +19,8 @@ import {
 } from "@tanstack/react-query";
 import Pay from "./pages/pay/Pay";
 import Success from "./pages/success/Success";
+import Cancel from "./pages/pay/Cancel.jsx";
+
 function App() {
   const queryClient = new QueryClient();
 
@@ -84,8 +86,12 @@ function App() {
           element: <Pay />,
         },
         {
-          path: "/success",
+          path: "/pay/success",
           element: <Success />,
+        },
+        {
+          path: "/pay/cancel",
+          element: <Cancel />,
         },
       ],
     },

@@ -6,15 +6,7 @@
   justify-content: center;
   padding: 2rem;
 
-  .StripeElement {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    padding: 1rem;
-    background-color: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #E8C4B8;
-  }
-
-  form {
+  .payment-container {
     background-color: #ffffff;
     border: 2px solid #D96F4B;
     padding: 2rem;
@@ -22,73 +14,72 @@
     max-width: 500px;
     width: 100%;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-
-    h2 {
-      font-size: 1.8rem;
-      color: #1C4C4C;
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
-    label {
-      font-weight: 600;
-      color: #333333;
-    }
-
-    input {
-      padding: 0.75rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-
-    button {
-      background-color: #D96F4B;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: #c65d3e;
-      }
-
-      &:disabled {
-        background-color: #f4c5b6;
-        cursor: not-allowed;
-      }
-    }
   }
 
-  .loading-message,
-  .success-message,
-  .error-message {
-    font-size: 1.2rem;
-    text-align: center;
-    padding: 1rem;
-    border-radius: 12px;
-    margin-top: 1rem;
-  }
-
-  .loading-message {
+  h2 {
+    font-size: 1.8rem;
     color: #1C4C4C;
+    text-align: center;
+    margin-bottom: 1rem;
   }
 
-  .success-message {
-    background-color: #e0f7ea;
-    color: #247356;
+  .payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
-  .error-message {
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  label {
+    font-weight: 600;
+    color: #333333;
+  }
+
+  input,
+  select {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+
+  .pay-button {
+    background-color: #D96F4B;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+
+    &:hover {
+      background-color: #c65d3e;
+    }
+
+    &:disabled {
+      background-color: #f4c5b6;
+      cursor: not-allowed;
+    }
+  }
+
+  .error {
     background-color: #fdecea;
     color: #b33939;
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
   }
 }
