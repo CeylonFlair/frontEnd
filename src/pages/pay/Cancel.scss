@@ -1,0 +1,45 @@
+.success.payment-container {
+  background-color: #ffffff;
+  border: 2px solid #D96F4B;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem auto;
+}
+
+.success h2 {
+  font-size: 1.8rem;
+  color: #b33939;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.success p {
+  color: #333333;
+  text-align: center;
+}
+
+.back-button {
+  background-color: #D96F4B;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  margin: 0 auto;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+}
+
+.back-button:hover {
+  background-color: #c65d3e;
+}

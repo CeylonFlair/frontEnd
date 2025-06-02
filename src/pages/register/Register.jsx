@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import upload from "../../utils/upload";
 import "./Register.scss";
 import newRequest from "../../utils/newRequest";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
   const [file, setFile] = useState(null);
@@ -15,6 +15,7 @@ function Register() {
     isSeller: false,
     desc: "",
   });
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -40,6 +41,7 @@ function Register() {
       });
       navigate("/")
     } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
       console.log(err);
     }
   };
@@ -48,12 +50,14 @@ function Register() {
       <form onSubmit={handleSubmit}>
         <div className="left">
           <h1>Create a new account</h1>
+          {error && <div style={{ color: 'red' }}>{error}</div>}
           <label htmlFor="">Username</label>
           <input
             name="username"
             type="text"
             placeholder="johndoe"
             onChange={handleChange}
+            required
           />
           <label htmlFor="">Email</label>
           <input
@@ -61,9 +65,15 @@ function Register() {
             type="email"
             placeholder="email"
             onChange={handleChange}
+            required
           />
           <label htmlFor="">Password</label>
-          <input name="password" type="password" onChange={handleChange} />
+          <input
+            name="password"
+            type="password"
+            onChange={handleChange}
+            required
+          />
           <label htmlFor="">Profile Picture</label>
           <input type="file" onChange={(e) => setFile(e.target.files[0])} />
           <label htmlFor="">Country</label>
@@ -72,8 +82,10 @@ function Register() {
             type="text"
             placeholder="Usa"
             onChange={handleChange}
+            required
           />
           <button type="submit">Register</button>
+          <p>Already have an account? <Link to='/login'>Login</Link> </p>
         </div>
         <div className="right">
           <h1>I want to become a seller</h1>
