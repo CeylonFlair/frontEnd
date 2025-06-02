@@ -147,6 +147,9 @@ function Navbar() {
               <span>{currentUser?.username || currentUser?.name}</span>
               {open && (
                 <div className="options">
+                  <Link className="link" to="/profile/my">
+                    View Profile
+                  </Link>
                   {currentUser.isSeller && (
                     <>
                       <Link className="link" to="/mygigs">
