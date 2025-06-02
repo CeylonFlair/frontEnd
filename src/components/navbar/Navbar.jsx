@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import newRequest from "../../utils/newRequest";
+import api from "../../utils/api";
 import "./Navbar.scss";
 
 function Navbar() {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [hasToken, setHasToken] = useState(!!localStorage.getItem("token"));
 
   const { pathname } = useLocation();
 
@@ -20,19 +23,87 @@ function Navbar() {
     };
   }, []);
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  // Fetch user from /users/me if token exists
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setCurrentUser(null);
+        return;
+      }
+      try {
+        const res = await api.get("/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const user = res.data;
+        // Set isSeller if role is 'artisan'
+        user.isSeller =
+          Array.isArray(user.roles) && user.roles.includes("artisan");
+        setCurrentUser(user);
+      } catch (err) {
+        setCurrentUser(null);
+      }
+    };
+
+    if (hasToken) {
+      fetchUser();
+    } else {
+      setCurrentUser(null);
+    }
+  }, [hasToken]);
 
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await newRequest.post("/auth/logout");
-      localStorage.setItem("currentUser", null);
-      navigate("/");
+      // First clear all local state
+      setCurrentUser(null);
+      setHasToken(false);
+      setOpen(false);
+
+      // Then clear localStorage
+      localStorage.removeItem("token");
+
+      // Try to logout on server (but don't wait for it)
+      api
+        .post("/auth/logout")
+        .catch((err) => console.log("Logout error:", err));
+
+      // Force a complete page reload to reset all React state
+      window.location.href = "/?logout=" + new Date().getTime();
     } catch (err) {
-      console.log(err);
+      console.error("Logout failed:", err);
+      alert("Logout failed. Please try again.");
     }
   };
+
+  // Make token checking more robust
+  useEffect(() => {
+    const checkToken = () => {
+      const token = localStorage.getItem("token");
+      const hasValidToken = !!token;
+      setHasToken(hasValidToken);
+
+      // If no token, ensure user is cleared
+      if (!hasValidToken) {
+        setCurrentUser(null);
+      }
+    };
+
+    // Check immediately
+    checkToken();
+
+    // Add event listeners
+    window.addEventListener("storage", checkToken);
+
+    // More frequent checks to catch edge cases
+    const interval = setInterval(checkToken, 500);
+
+    return () => {
+      window.removeEventListener("storage", checkToken);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
@@ -48,17 +119,32 @@ function Navbar() {
           <span>CeylonFlair</span>
           </Link> */}
           <Link className="link" to="/">
-          <span>Explore</span>
+            <span>Explore</span>
           </Link>
           <Link className="link" to="/">
-          <span>English</span>
+            <span>English</span>
           </Link>
-          
-          {!currentUser?.isSeller && <Link className="link" to="/"><span>Become a Seller</span></Link>}
+
+          {!currentUser?.isSeller && (
+            <Link className="link" to="/">
+              <span>Become a Seller</span>
+            </Link>
+          )}
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
-              <img src={currentUser.img || "/img/noavatar.jpg"} alt="" />
-              <span>{currentUser?.username}</span>
+              <img
+                src={
+                  currentUser.profilePicture ||
+                  currentUser.img ||
+                  "/img/noavatar.jpg"
+                }
+                alt="Profile"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/img/noavatar.jpg";
+                }}
+              />
+              <span>{currentUser?.username || currentUser?.name}</span>
               {open && (
                 <div className="options">
                   {currentUser.isSeller && (
@@ -85,7 +171,9 @@ function Navbar() {
             </div>
           ) : (
             <>
-              <Link to="/login" className="link">Sign in</Link>
+              <Link to="/login" className="link">
+                Sign in
+              </Link>
               <Link className="link" to="/register">
                 <button>Join</button>
               </Link>
@@ -121,7 +209,6 @@ function Navbar() {
             <Link className="link menuLink" to="/">
               Handicraft Educational Services
             </Link>
-            
           </div>
           <hr />
         </>

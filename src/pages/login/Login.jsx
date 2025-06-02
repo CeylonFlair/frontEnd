@@ -21,6 +21,7 @@ function Login() {
       const { token, message } = res.data;
       localStorage.setItem("token", token);
       setSuccess(message || "Login successful!");
+
       setTimeout(() => {
         navigate("/"); // redirect to home or dashboard
       }, 1500);
