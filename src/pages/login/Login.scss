@@ -42,3 +42,47 @@
     }
   }
 }
+
+.login-error {
+  color: #c00;
+  background: #fff3f3;
+  border: 1px solid #ffd6d6;
+  border-radius: 4px;
+  padding: 10px 0;
+  margin: 8px 0;
+  text-align: center;
+  width: 100%;
+  font-size: 14px;
+  display: block;
+}
+
+.login-success {
+  color: #090;
+  background: #f3fff3;
+  border: 1px solid #d6ffd6;
+  border-radius: 4px;
+  padding: 10px 0;
+  margin: 8px 0;
+  text-align: center;
+  width: 100%;
+  font-size: 14px;
+  display: block;
+}
+
+.btn-disabled {
+  background: #ccc !important;
+  color: #666 !important;
+  cursor: not-allowed !important;
+  border: 1px solid #aaa !important;
+}
+
+.forgot-password-link {
+  color: #6a9fb5;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 8px;
+  margin-top: -10px;
+  text-align: right;
+}

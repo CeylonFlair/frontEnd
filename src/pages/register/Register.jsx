@@ -3,6 +3,8 @@ import upload from "../../utils/upload";
 import "./Register.scss";
 import api from "../../utils/api";
 import { useNavigate, Link } from "react-router-dom";
+import countries from "../../utils/countries";
+import countryCodes from "../../utils/countryCodes";
 
 function Register() {
   const [file, setFile] = useState(null);
@@ -11,11 +13,12 @@ function Register() {
     email: "",
     password: "",
     repeat_password: "",
-    // country: "",
+    country: "Sri Lanka",
     roles: ["user"], // default role
-    // isSeller: false,
-    // desc: "",
+    description: "",
   });
+  const [countryCode, setCountryCode] = useState("94");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false); // loading state
@@ -30,7 +33,11 @@ function Register() {
 
   const handleSeller = (e) => {
     setUser((prev) => {
-      return { ...prev, isSeller: e.target.checked };
+      if (e.target.checked) {
+        return { ...prev, roles: ["artisan"] };
+      } else {
+        return { ...prev, roles: ["user"] };
+      }
     });
   };
   const handleSubmit = async (e) => {
@@ -41,6 +48,9 @@ function Register() {
     try {
       await api.post("/auth/register", {
         ...user,
+        country: user.country,
+        contactNumber: `(${countryCode}) ${phone}`,
+        description: user.description,
         // img: url,
       });
       setSuccess(true); // Show success message
@@ -97,14 +107,19 @@ function Register() {
           />
           {/* <label htmlFor="">Profile Picture</label>
           <input type="file" onChange={(e) => setFile(e.target.files[0])} /> */}
-          {/* <label htmlFor="">Country</label>
-          <input
+          <label htmlFor="">Country</label>
+          <select
             name="country"
-            type="text"
-            placeholder="Your Country"
+            value={user.country}
             onChange={handleChange}
             required
-          /> */}
+          >
+            {countries.map((country) => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
           <button
             type="submit"
             disabled={loading}
@@ -126,16 +141,34 @@ function Register() {
             </label>
           </div>
           <label htmlFor="">Phone Number</label>
-          <input
-            name="phone"
-            type="text"
-            placeholder="+1 234 567 89"
-            onChange={handleChange}
-          />
+          <div className="phone-row">
+            <select
+              name="countryCode"
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+              required
+              className="country-code-select"
+            >
+              {countryCodes.map((c) => (
+                <option key={c.code} value={c.code}>
+                  +{c.code} ({c.name})
+                </option>
+              ))}
+            </select>
+            <input
+              name="phone"
+              type="text"
+              placeholder="123456789"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+              className="phone-input"
+            />
+          </div>
           <label htmlFor="">Description</label>
           <textarea
             placeholder="A short description of yourself"
-            name="desc"
+            name="description"
             id=""
             cols="30"
             rows="10"

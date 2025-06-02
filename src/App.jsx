@@ -14,6 +14,8 @@ import Messages from "./pages/messages/Messages";
 import Message from "./pages/message/Message";
 import MyGigs from "./pages/myGigs/MyGigs";
 import EmailVerification from "./pages/emailVerification/EmailVerification.jsx";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
+import ResetPassword from "./pages/resetPassword/ResetPassword";
 import {
   QueryClient,
   QueryClientProvider,
@@ -51,6 +53,15 @@ function App() {
           path: "/verify-email",
           element: <EmailVerification />, // <-- Add this route
         },
+
+        {
+          path: "/forgot-password",
+          element: <ForgotPassword />,
+        },
+        { 
+          path: "/reset-password",
+          element: <ResetPassword />, 
+        } ,
 
         {
           path: "/gigs",
