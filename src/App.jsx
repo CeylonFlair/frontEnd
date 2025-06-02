@@ -23,6 +23,7 @@ import {
 import Pay from "./pages/pay/Pay";
 import Success from "./pages/success/Success";
 import Cancel from "./pages/pay/Cancel.jsx";
+import MyProfile from "./pages/profile/Profile.jsx";
 
 function App() {
   const queryClient = new QueryClient();
@@ -50,18 +51,26 @@ function App() {
         },
 
         {
+          // DONE
           path: "/verify-email",
-          element: <EmailVerification />, // <-- Add this route
+          element: <EmailVerification />,
         },
 
         {
+          // DONE
           path: "/forgot-password",
           element: <ForgotPassword />,
         },
-        { 
+
+        {
+          path: "/profile/my",
+          element: <MyProfile />,
+        },
+        {
+          // DONE
           path: "/reset-password",
-          element: <ResetPassword />, 
-        } ,
+          element: <ResetPassword />,
+        },
 
         {
           path: "/gigs",
@@ -92,10 +101,12 @@ function App() {
           element: <Gig />,
         },
         {
+          // DONE
           path: "/register",
           element: <Register />,
         },
         {
+          // DONE
           path: "/login",
           element: <Login />,
         },
