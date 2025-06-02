@@ -13,6 +13,7 @@ import Orders from "./pages/orders/Orders";
 import Messages from "./pages/messages/Messages";
 import Message from "./pages/message/Message";
 import MyGigs from "./pages/myGigs/MyGigs";
+import EmailVerification from "./pages/emailVerification/EmailVerification.jsx";
 import {
   QueryClient,
   QueryClientProvider,
@@ -45,6 +46,12 @@ function App() {
           path: "/",
           element: <Home />,
         },
+
+        {
+          path: "/verify-email",
+          element: <EmailVerification />, // <-- Add this route
+        },
+
         {
           path: "/gigs",
           element: <Gigs />,
