@@ -76,7 +76,7 @@ function App() {
           path: "/gigs",
           element: <Gigs />,
         },
-        {
+        { // DONE
           path: "/myGigs",
           element: <MyGigs />,
         },
@@ -92,7 +92,7 @@ function App() {
           path: "/message/:id",
           element: <Message />,
         },
-        {
+        { // DONE
           path: "/add",
           element: <Add />,
         },

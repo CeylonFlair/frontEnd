@@ -22,7 +22,7 @@ function Gigs() {
   return (
     <div className="gigs">
       <div className="container">
-        <span className="breadcrumbs">CeylonFlair > Jewelry & Accessories > </span>
+        <span className="breadcrumbs">CeylonFlair Jewelry & Accessories  </span>
         <h1>Jewelry</h1>
         <p>
           Handcrafted elegance, made in Sri Lanka.
