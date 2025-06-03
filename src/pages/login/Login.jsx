@@ -20,6 +20,13 @@ function Login() {
       const res = await api.post("/auth/login", { email, password });
       const { token, message } = res.data;
       localStorage.setItem("token", token);
+
+      // Fetch user info and store in localStorage
+      const userRes = await api.get("/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      localStorage.setItem("user", JSON.stringify(userRes.data));
+
       setSuccess(message || "Login successful!");
 
       setTimeout(() => {

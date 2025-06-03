@@ -6,10 +6,10 @@ function ProjectCard({ card }) {
     <div className="projectCard">
       <img src={card.img} alt="" />
       <div className="info">
-        <img src={card.pp} alt="" />
+        <img src={card.provider.profilePicture} alt="" />
         <div className="texts">
-          <h2>{card.cat}</h2>
-          <span>{card.username}</span>
+          <h2>{card.category}</h2>
+          <span>{card.provider.name}</span>
         </div>
       </div>
     </div>

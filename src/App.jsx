@@ -45,7 +45,7 @@ function App() {
       path: "/",
       element: <Layout />,
       children: [
-        {
+        { // DONE
           path: "/",
           element: <Home />,
         },
@@ -62,7 +62,7 @@ function App() {
           element: <ForgotPassword />,
         },
 
-        {
+        { // DONE
           path: "/profile/my",
           element: <MyProfile />,
         },
@@ -80,7 +80,7 @@ function App() {
           path: "/myGigs",
           element: <MyGigs />,
         },
-        {
+        { // DONE
           path: "/orders",
           element: <Orders />,
         },
@@ -96,7 +96,7 @@ function App() {
           path: "/add",
           element: <Add />,
         },
-        {
+        { // DONE
           path: "/gig/:id",
           element: <Gig />,
         },
