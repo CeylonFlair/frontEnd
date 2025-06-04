@@ -501,3 +501,181 @@
     }
   }
 }
+
+// Add custom slider styles
+.custom-slider {
+  position: relative;
+  margin: 20px 0;
+  width: 100%;
+  
+  .slider-container {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .slider-content {
+    display: flex;
+    height: 400px; // Adjust height as needed
+    
+    .slider-item {
+      flex-shrink: 0;
+      height: 100%;
+      overflow: hidden;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block; // This ensures no extra space below images
+      }
+    }
+  }
+  
+  .slider-single {
+    height: 400px; // Match the height of slider-content
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+    }
+  }
+  
+  .slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f8f4e8;
+    color: #8b5a2b;
+    border: 1px solid #d7c49e;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: #efe8d8;
+      color: #71472a;
+    }
+    
+    &.slider-arrow-left {
+      left: 15px;
+    }
+    
+    &.slider-arrow-right {
+      right: 15px;
+    }
+  }
+  
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    
+    .slider-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #d7c49e;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &.active {
+        background-color: #8b5a2b;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+// Add these simple slider styles
+.simple-slider {
+  position: relative;
+  width: 100%;
+  margin: 20px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  
+  .slider-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .slider-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    color: #8b5a2b;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    
+    // Position buttons vertically centered
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    
+    &.prev-btn {
+      left: 15px;
+    }
+    
+    &.next-btn {
+      right: 15px;
+    }
+  }
+  
+  .slider-dots {
+    display: flex;
+    gap: 8px;
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    
+    .slider-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &.active {
+        background-color: white;
+        transform: scale(1.2);
+      }
+    }
+  }
+}

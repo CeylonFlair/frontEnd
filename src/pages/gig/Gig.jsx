@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import "./Gig.scss";
-import { Slider } from "infinite-react-carousel/lib";
+// Remove the Slider import
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../utils/api";
@@ -343,6 +343,20 @@ function Gig() {
     );
   };
 
+  // Add state for the custom slider
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Navigation functions for the slider
+  const nextSlide = () => {
+    if (!data?.images?.length) return;
+    setCurrentSlide((prev) => (prev === data.images.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    if (!data?.images?.length) return;
+    setCurrentSlide((prev) => (prev === 0 ? data.images.length - 1 : prev - 1));
+  };
+
   return (
     <div className="gig">
       {isLoading ? (
@@ -561,13 +575,56 @@ function Gig() {
                 </div>
               )}
             </div>
-            <Slider slidesToShow={1} arrowsScroll={1} className="slider">
+            {/* Replace Slider with custom implementation */}
+            <div className="simple-slider">
               {data.images && data.images.length > 0 ? (
-                data.images.map((img) => <img key={img} src={img} alt="" />)
+                <>
+                  <img
+                    src={data.images[currentSlide]}
+                    alt={`Slide ${currentSlide + 1}`}
+                    className="slider-image"
+                  />
+
+                  {data.images.length > 1 && (
+                    <>
+                      {/* Move buttons outside slider-controls for vertical centering */}
+                      <button
+                        onClick={prevSlide}
+                        className="slider-btn prev-btn"
+                      >
+                        &lt;
+                      </button>
+
+                      <button
+                        onClick={nextSlide}
+                        className="slider-btn next-btn"
+                      >
+                        &gt;
+                      </button>
+
+                      {/* Keep dots at the bottom */}
+                      <div className="slider-dots">
+                        {data.images.map((_, index) => (
+                          <span
+                            key={index}
+                            className={`slider-dot ${
+                              currentSlide === index ? "active" : ""
+                            }`}
+                            onClick={() => setCurrentSlide(index)}
+                          ></span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
               ) : (
-                <img src={data.coverImage} alt="" />
+                <img
+                  src={data.coverImage}
+                  alt="Cover"
+                  className="slider-image"
+                />
               )}
-            </Slider>
+            </div>
             {/* Show Edit Details button only for provider/artisan and not in edit mode */}
             {isProviderArtisan && !editMode && (
               <button
