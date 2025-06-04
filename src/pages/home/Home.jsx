@@ -41,7 +41,7 @@ function Home() {
       <div className="features dark">
         <div className="container">
           <div className="item">
-            <img src="../../../public/img/promotion.png" alt="" />
+            <img src="/img/promotion.png" alt="" />
           </div>
 
           <div className="item">
@@ -54,24 +54,24 @@ function Home() {
               creative business
             </p>
             <div className="title">
-              <img src="./img/check.png" alt="" />
+              <img src="/img/check.png" alt="" />
               Get discovered faster with priority placement on the homepage and
               search results
             </div>
 
             <div className="title">
-              <img src="./img/check.png" alt="" />
+              <img src="/img/check.png" alt="" />
               Showcase your credibility with a Verified Artisan badge proudly
               displayed on your profil
             </div>
 
             <div className="title">
-              <img src="./img/check.png" alt="" />
+              <img src="/img/check.png" alt="" />
               Enjoy one-on-one support from a dedicated success manager for
               guidance and growth
             </div>
             <div className="title">
-              <img src="./img/check.png" alt="" />
+              <img src="/img/check.png" alt="" />
               Unlock exclusive seller tools, premium listing features, and
               seasonal marketing boosts
             </div>
