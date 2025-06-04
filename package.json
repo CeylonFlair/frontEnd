@@ -23,7 +23,8 @@
     "react-router-dom": "^7.6.1",
     "react-slick": "^0.30.3",
     "sass": "^1.89.0",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+     "jquery": "^3.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
