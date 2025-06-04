@@ -10,10 +10,10 @@ const TrustedBy = () => {
         </div>
         
         <div className="logos">
-      <img src="../../../public/img/1.png"/>
-      <img src="../../../public/img/2.png" />
-      <img src="../../../public/img/3.png"/>
-      <img src="../../../public/img/4.png"/>
+      <img src="/img/1.png"/>
+      <img src="/img/2.png" />
+      <img src="/img/3.png"/>
+      <img src="/img/4.png"/>
     </div>
       </div>
     </div>
