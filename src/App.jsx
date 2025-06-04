@@ -110,16 +110,16 @@ function App() {
           path: "/login",
           element: <Login />,
         },
-        {
+        { // DONE
           path: "/pay/:id",
           element: <Pay />,
         },
-        {
+        { // DONE
           path: "/pay/success",
           element: <Success />,
         },
-        {
-          path: "/pay/cancel",
+        { // DONE
+          path: "/pay/:id/cancel",
           element: <Cancel />,
         },
       ],

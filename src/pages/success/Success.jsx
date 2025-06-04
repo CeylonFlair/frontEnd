@@ -12,10 +12,9 @@ const Success = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        await newRequest.put("/orders", { payment_intent });
         setTimeout(() => {
           navigate("/orders");
-        }, 5000);
+        }, 2000);
       } catch (err) {
         console.log(err);
       }
