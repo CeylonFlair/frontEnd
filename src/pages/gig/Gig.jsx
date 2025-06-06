@@ -53,6 +53,8 @@ function Gig() {
   // Add state for review deletion
   const [deletingReviewId, setDeletingReviewId] = useState(null);
   const [deleteReviewError, setDeleteReviewError] = useState("");
+  // Add state for delete confirmation popup
+  const [confirmDeleteReviewId, setConfirmDeleteReviewId] = useState(null);
 
   // Helper: is current user the provider and artisan
   const isProviderArtisan =
@@ -324,6 +326,68 @@ function Gig() {
       );
     }
     setDeletingReviewId(null);
+  };
+
+  // Handler for confirming delete
+  const handleConfirmDelete = (reviewId) => {
+    setConfirmDeleteReviewId(reviewId);
+  };
+
+  // Handler for canceling delete
+  const handleCancelDelete = () => {
+    setConfirmDeleteReviewId(null);
+  };
+
+  // Handler for actually deleting after confirmation
+  const handleDeleteReviewConfirmed = async () => {
+    if (!confirmDeleteReviewId) return;
+    setDeletingReviewId(confirmDeleteReviewId);
+    setDeleteReviewError("");
+    try {
+      await api.delete(`/reviews/${confirmDeleteReviewId}`);
+      setReviews((prev) => prev.filter((r) => r._id !== confirmDeleteReviewId));
+    } catch (err) {
+      setDeleteReviewError(
+        err.response?.data?.message || err.message || "Failed to delete review"
+      );
+    }
+    setDeletingReviewId(null);
+    setConfirmDeleteReviewId(null);
+  };
+
+  // Render confirmation popup for review deletion
+  const renderDeleteConfirmPopup = () => {
+    if (!confirmDeleteReviewId) return null;
+    return ReactDOM.createPortal(
+      <div className="delete-review-popup-overlay">
+        <div className="delete-review-popup-content">
+          <h3>Delete Review?</h3>
+          <p>
+            Are you sure you want to delete your review? This action cannot be
+            undone.
+          </p>
+          <div className="delete-review-popup-actions">
+            <button
+              className="delete-review-popup-btn delete"
+              onClick={handleDeleteReviewConfirmed}
+              disabled={deletingReviewId === confirmDeleteReviewId}
+            >
+              {deletingReviewId === confirmDeleteReviewId
+                ? "Deleting..."
+                : "Yes, Delete"}
+            </button>
+            <button
+              className="delete-review-popup-btn cancel"
+              onClick={handleCancelDelete}
+              disabled={deletingReviewId === confirmDeleteReviewId}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
   };
 
   return (
@@ -606,18 +670,9 @@ function Gig() {
               <button
                 onClick={handleEditClick}
                 disabled={editLoading}
-                style={{
-                  margin: "16px 0",
-                  background: editLoading ? "#ccc" : "#bf7e7e",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 4,
-                  padding: "8px 18px",
-                  fontWeight: 500,
-                  cursor: editLoading ? "not-allowed" : "pointer",
-                  opacity: editLoading ? 0.7 : 1,
-                  transition: "background 0.2s, opacity 0.2s",
-                }}
+                className={`gig-edit-details-btn${
+                  editLoading ? " loading" : ""
+                }`}
               >
                 Edit Details
               </button>
@@ -633,9 +688,7 @@ function Gig() {
                 />
                 <div className="info">
                   <span>{data.provider?.name}</span>
-                  <span style={{ fontSize: 14, color: "#888" }}>
-                    {data.provider?.email}
-                  </span>
+                  <span className="seller-email">{data.provider?.email}</span>
                   {/* Optionally show rating */}
                   {typeof data.rating === "number" && (
                     <div className="stars seller-stars">
@@ -716,17 +769,7 @@ function Gig() {
             {currentUser?.roles?.includes("user") && (
               <button
                 onClick={() => setShowOrderPopup(true)}
-                style={{
-                  background: "#1dbf73",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 6,
-                  padding: "12px 36px",
-                  fontWeight: 700,
-                  fontSize: 17,
-                  cursor: "pointer",
-                  marginTop: 12,
-                }}
+                className="gig-continue-btn"
               >
                 Continue
               </button>
@@ -737,140 +780,102 @@ function Gig() {
             <div style={{ marginTop: 32 }}>
               <h3 style={{ marginBottom: 12 }}>Reviews</h3>
               {deleteReviewError && (
-                <div style={{ color: "#c0392b", marginBottom: 10 }}>
-                  {deleteReviewError}
-                </div>
+                <div className="review-delete-error">{deleteReviewError}</div>
               )}
               {reviewsLoading ? (
                 <div>Loading reviews...</div>
               ) : reviewsError ? (
-                <div style={{ color: "#c0392b" }}>{reviewsError}</div>
+                <div className="review-error">{reviewsError}</div>
               ) : reviews.length === 0 ? (
-                <div style={{ color: "#888" }}>No reviews yet.</div>
+                <div className="review-empty">No reviews yet.</div>
               ) : (
                 <div className="reviews-list">
                   {reviews.map((review) => (
-                    <div
-                      key={review._id}
-                      className="review-item"
-                      style={{
-                        display: "flex",
-                        gap: 14,
-                        marginBottom: 18,
-                        background: "#faf9f8",
-                        borderRadius: 8,
-                        padding: "14px 16px",
-                        boxShadow: "0 1px 4px #eee",
-                        alignItems: "flex-start",
-                      }}
-                    >
+                    <div key={review._id} className="review-item">
                       <img
                         src={
                           review.reviewerDetails?.profilePicture ||
                           "/img/noavatar.jpg"
                         }
                         alt={review.reviewerDetails?.name || "Reviewer"}
-                        style={{
-                          width: 48,
-                          height: 48,
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                          marginRight: 8,
-                        }}
+                        className="reviewer-img"
                       />
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, fontSize: 15 }}>
+                      <div className="review-content">
+                        <div className="review-header">
                           {review.reviewerDetails?.name || "Anonymous"}
-                          <span
-                            style={{
-                              color: "#888",
-                              fontWeight: 400,
-                              fontSize: 13,
-                              marginLeft: 8,
-                            }}
-                          >
+                          <span className="review-country">
                             {review.reviewerDetails?.country
                               ? `(${review.reviewerDetails.country})`
                               : ""}
                           </span>
-                          {/* Show delete button only if signed-in user is the reviewer */}
+                          {/* Show delete icon button only if signed-in user is the reviewer */}
                           {currentUser &&
                             review.reviewer &&
                             review.reviewer === currentUser._id && (
                               <button
-                                style={{
-                                  marginLeft: 12,
-                                  background: "#ffeaea",
-                                  color: "#c0392b",
-                                  border: "1px solid #c0392b",
-                                  borderRadius: 4,
-                                  padding: "2px 10px",
-                                  fontSize: 13,
-                                  fontWeight: 500,
-                                  cursor:
-                                    deletingReviewId === review._id
-                                      ? "not-allowed"
-                                      : "pointer",
-                                  opacity:
-                                    deletingReviewId === review._id ? 0.7 : 1,
-                                }}
+                                className={`review-delete-btn icon-btn${
+                                  deletingReviewId === review._id
+                                    ? " loading"
+                                    : ""
+                                }`}
                                 disabled={deletingReviewId === review._id}
-                                onClick={() => handleDeleteReview(review._id)}
+                                onClick={() => handleConfirmDelete(review._id)}
                                 title="Delete your review"
+                                aria-label="Delete review"
                               >
-                                {deletingReviewId === review._id
-                                  ? "Deleting..."
-                                  : "Delete"}
+                                {/* Garbage can SVG icon, white color */}
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  style={{ display: "block" }}
+                                >
+                                  <path
+                                    d="M6.5 8V14M10 8V14M13.5 8V14M3 5.5H17M8.5 3.5H11.5C12.0523 3.5 12.5 3.94772 12.5 4.5V5.5H7.5V4.5C7.5 3.94772 7.94772 3.5 8.5 3.5ZM16 5.5V16.5C16 17.0523 15.5523 17.5 15 17.5H5C4.44772 17.5 4 17.0523 4 16.5V5.5"
+                                    stroke="#fff"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                                {deletingReviewId === review._id && (
+                                  <span className="visually-hidden">
+                                    Deleting...
+                                  </span>
+                                )}
                               </button>
                             )}
                         </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            margin: "4px 0 8px 0",
-                          }}
-                        >
+                        <div className="review-stars-row">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span
                               key={star}
-                              style={{
-                                color:
-                                  star <= review.rating ? "#f1c40f" : "#ccc",
-                                fontSize: 16,
-                                marginRight: 2,
-                              }}
+                              className={`review-star${
+                                star <= review.rating ? " filled" : ""
+                              }`}
                             >
                               ★
                             </span>
                           ))}
-                          <span
-                            style={{
-                              color: "#555",
-                              fontSize: 13,
-                              marginLeft: 6,
-                            }}
-                          >
+                          <span className="review-rating">
                             {review.rating}/5
                           </span>
-                          <span
-                            style={{
-                              color: "#aaa",
-                              fontSize: 12,
-                              marginLeft: 10,
-                            }}
-                          >
+                          <span className="review-date">
                             {review.createdAt
                               ? new Date(review.createdAt).toLocaleDateString()
                               : ""}
                           </span>
                         </div>
-                        <div style={{ fontSize: 15 }}>{review.comment}</div>
+                        <div className="review-comment">{review.comment}</div>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
+              {/* Render the delete confirmation popup */}
+              {renderDeleteConfirmPopup()}
             </div>
             {/* --- END REVIEWS SECTION --- */}
           </div>
