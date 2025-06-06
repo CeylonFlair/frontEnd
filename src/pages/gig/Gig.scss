@@ -679,3 +679,160 @@
     }
   }
 }
+
+.order-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.order-popup-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 32px 24px 32px;
+  min-width: 340px;
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-width: 95vw;
+}
+
+.order-popup-title {
+  margin-bottom: 18px;
+  color: #7c3a3a;
+}
+
+.order-popup-listingid {
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+.order-popup-listingid-value {
+  color: #888;
+}
+
+.order-popup-date {
+  margin-bottom: 14px;
+}
+
+.order-popup-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.order-popup-input {
+  margin-left: 8px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.order-popup-note {
+  margin-bottom: 18px;
+}
+
+.order-popup-textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  resize: vertical;
+}
+
+.order-popup-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+
+.order-popup-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 1;
+  transition: background 0.2s, opacity 0.2s;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.order-popup-btn-yes {
+  background: #1dbf73;
+  color: #fff;
+}
+
+.order-popup-btn-no {
+  background: #eee;
+  color: #555;
+}
+
+.order-popup-error {
+  color: #c0392b;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.order-popup-success {
+  color: #27ae60;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.stars.seller-stars {
+  display: flex;
+  align-items: center;
+  background: #f9f7f2;
+  padding: 4px 8px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-left: 8px;
+  width: fit-content;
+  margin-top: 6px;
+}
+
+.stars.seller-stars .star {
+  color: #ddd; /* Default gray color for all stars */
+  font-size: 18px;
+  margin-right: 2px;
+  text-shadow: none;
+  transition: color 0.2s, transform 0.2s;
+  cursor: default;
+}
+
+/* Explicitly set the filled stars to yellow */
+.stars.seller-stars .star.filled,
+.stars.seller-stars .star[class*="filled"] {
+  color: #f1c40f;
+  text-shadow: 0px 1px 1px rgba(0,0,0,0.1);
+}
+
+/* Explicitly ensure empty stars are gray */
+.stars.seller-stars .star.empty,
+.stars.seller-stars .star:not(.filled):not([class*="filled"]) {
+  color: #ddd;
+}
+
+.stars.seller-stars .star:hover {
+  transform: scale(1.2);
+}
+
+.stars-value {
+  margin-left: 6px;
+  font-weight: 600;
+  color: #7c3a3a;
+  font-size: 14px;
+}

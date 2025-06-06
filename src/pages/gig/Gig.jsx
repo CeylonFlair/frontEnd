@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import "./Gig.scss";
 // Remove the Slider import
@@ -45,6 +45,14 @@ function Gig() {
   const [orderLoading, setOrderLoading] = useState(false);
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
+
+  // Add state for reviews
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewsError, setReviewsError] = useState("");
+  // Add state for review deletion
+  const [deletingReviewId, setDeletingReviewId] = useState(null);
+  const [deleteReviewError, setDeleteReviewError] = useState("");
 
   // Helper: is current user the provider and artisan
   const isProviderArtisan =
@@ -215,127 +223,57 @@ function Gig() {
     if (!showOrderPopup) return null;
 
     return ReactDOM.createPortal(
-      <div
-        className="order-popup-overlay"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 9999,
-        }}
-      >
-        <div
-          className="order-popup-content"
-          style={{
-            background: "#fff",
-            borderRadius: 12,
-            padding: "32px 32px 24px 32px",
-            minWidth: 340,
-            boxShadow: "0 8px 48px rgba(0, 0, 0, 0.3)",
-            position: "relative",
-            maxWidth: "95vw",
-          }}
-        >
-          <h2 style={{ marginBottom: 18, color: "#7c3a3a" }}>Place Order?</h2>
-          <div style={{ marginBottom: 12, fontSize: 15 }}>
-            <b>Listing ID:</b> <span style={{ color: "#888" }}>{data._id}</span>
+      <div className="order-popup-overlay">
+        <div className="order-popup-content">
+          <h2 className="order-popup-title">Place Order?</h2>
+          <div className="order-popup-listingid">
+            <b>Listing ID:</b>{" "}
+            <span className="order-popup-listingid-value">{data._id}</span>
           </div>
-          <div style={{ marginBottom: 14 }}>
-            <label style={{ fontWeight: 500, color: "#555" }}>
+          <div className="order-popup-date">
+            <label className="order-popup-label">
               Booking Date:
               <input
                 type="datetime-local"
                 value={orderDate}
                 onChange={(e) => setOrderDate(e.target.value)}
-                style={{
-                  marginLeft: 8,
-                  padding: "6px 12px",
-                  border: "1px solid #ccc",
-                  borderRadius: 6,
-                  fontSize: 15,
-                }}
+                className="order-popup-input"
                 disabled={orderLoading}
               />
             </label>
           </div>
-          <div style={{ marginBottom: 18 }}>
-            <label style={{ fontWeight: 500, color: "#555" }}>
+          <div className="order-popup-note">
+            <label className="order-popup-label">
               Note:
               <textarea
                 value={orderNote}
                 onChange={(e) => setOrderNote(e.target.value)}
                 rows={2}
                 placeholder="Leave a note for the provider (optional)"
-                style={{
-                  width: "100%",
-                  marginTop: 6,
-                  padding: "8px 12px",
-                  border: "1px solid #ccc",
-                  borderRadius: 6,
-                  fontSize: 15,
-                  resize: "vertical",
-                }}
+                className="order-popup-textarea"
                 disabled={orderLoading}
               />
             </label>
           </div>
-          <div style={{ display: "flex", gap: 14, justifyContent: "center" }}>
+          <div className="order-popup-actions">
             <button
               onClick={handlePlaceOrder}
               disabled={orderLoading || !orderDate}
-              style={{
-                background: "#1dbf73",
-                color: "#fff",
-                border: "none",
-                borderRadius: 6,
-                padding: "10px 28px",
-                fontWeight: 600,
-                fontSize: 16,
-                cursor: orderLoading || !orderDate ? "not-allowed" : "pointer",
-                opacity: orderLoading || !orderDate ? 0.7 : 1,
-              }}
+              className="order-popup-btn order-popup-btn-yes"
             >
               {orderLoading ? "Placing..." : "Yes, Place Order"}
             </button>
             <button
               onClick={() => setShowOrderPopup(false)}
               disabled={orderLoading}
-              style={{
-                background: "#eee",
-                color: "#555",
-                border: "none",
-                borderRadius: 6,
-                padding: "10px 28px",
-                fontWeight: 600,
-                fontSize: 16,
-                cursor: orderLoading ? "not-allowed" : "pointer",
-                opacity: orderLoading ? 0.7 : 1,
-              }}
+              className="order-popup-btn order-popup-btn-no"
             >
               No, Cancel
             </button>
           </div>
-          {orderError && (
-            <div
-              style={{ color: "#c0392b", marginTop: 10, textAlign: "center" }}
-            >
-              {orderError}
-            </div>
-          )}
+          {orderError && <div className="order-popup-error">{orderError}</div>}
           {orderSuccess && (
-            <div
-              style={{ color: "#27ae60", marginTop: 10, textAlign: "center" }}
-            >
-              {orderSuccess}
-            </div>
+            <div className="order-popup-success">{orderSuccess}</div>
           )}
         </div>
       </div>,
@@ -355,6 +293,37 @@ function Gig() {
   const prevSlide = () => {
     if (!data?.images?.length) return;
     setCurrentSlide((prev) => (prev === 0 ? data.images.length - 1 : prev - 1));
+  };
+
+  // Fetch reviews for this listing
+  useEffect(() => {
+    setReviews([]);
+    setReviewsLoading(true);
+    setReviewsError("");
+    api
+      .get(`/reviews/listing/${id}`)
+      .then((res) => setReviews(res.data || []))
+      .catch((err) =>
+        setReviewsError(
+          err.response?.data?.message || err.message || "Failed to load reviews"
+        )
+      )
+      .finally(() => setReviewsLoading(false));
+  }, [id]);
+
+  // Handler for deleting a review
+  const handleDeleteReview = async (reviewId) => {
+    setDeletingReviewId(reviewId);
+    setDeleteReviewError("");
+    try {
+      await api.delete(`/reviews/${reviewId}`);
+      setReviews((prev) => prev.filter((r) => r._id !== reviewId));
+    } catch (err) {
+      setDeleteReviewError(
+        err.response?.data?.message || err.message || "Failed to delete review"
+      );
+    }
+    setDeletingReviewId(null);
   };
 
   return (
@@ -565,13 +534,20 @@ function Gig() {
               <span>{data.provider?.name}</span>
               {/* Optionally show rating if available */}
               {typeof data.rating === "number" && (
-                <div className="stars">
-                  {Array(Math.round(data.rating))
+                <div className="stars seller-stars">
+                  {Array(5)
                     .fill()
-                    .map((_, i) => (
-                      <img src="/img/star.png" alt="" key={i} />
+                    .map((_, index) => (
+                      <span
+                        key={index}
+                        className={`star ${
+                          index < data.rating ? "filled" : "empty"
+                        }`}
+                      >
+                        ★
+                      </span>
                     ))}
-                  <span>{data.rating}</span>
+                  <span className="stars-value">{data.rating.toFixed(1)}</span>
                 </div>
               )}
             </div>
@@ -662,13 +638,20 @@ function Gig() {
                   </span>
                   {/* Optionally show rating */}
                   {typeof data.rating === "number" && (
-                    <div className="stars">
-                      {Array(Math.round(data.rating))
-                        .fill()
-                        .map((_, i) => (
-                          <img src="/img/star.png" alt="" key={i} />
-                        ))}
-                      <span>{data.rating}</span>
+                    <div className="stars seller-stars">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`star${
+                            star <= data.rating ? " filled" : ""
+                          }`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                      <span className="stars-value">
+                        {data.rating.toFixed(1)}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -750,6 +733,146 @@ function Gig() {
             )}
             {/* Render the portal */}
             {renderOrderPopup()}
+            {/* --- REVIEWS SECTION --- */}
+            <div style={{ marginTop: 32 }}>
+              <h3 style={{ marginBottom: 12 }}>Reviews</h3>
+              {deleteReviewError && (
+                <div style={{ color: "#c0392b", marginBottom: 10 }}>
+                  {deleteReviewError}
+                </div>
+              )}
+              {reviewsLoading ? (
+                <div>Loading reviews...</div>
+              ) : reviewsError ? (
+                <div style={{ color: "#c0392b" }}>{reviewsError}</div>
+              ) : reviews.length === 0 ? (
+                <div style={{ color: "#888" }}>No reviews yet.</div>
+              ) : (
+                <div className="reviews-list">
+                  {reviews.map((review) => (
+                    <div
+                      key={review._id}
+                      className="review-item"
+                      style={{
+                        display: "flex",
+                        gap: 14,
+                        marginBottom: 18,
+                        background: "#faf9f8",
+                        borderRadius: 8,
+                        padding: "14px 16px",
+                        boxShadow: "0 1px 4px #eee",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <img
+                        src={
+                          review.reviewerDetails?.profilePicture ||
+                          "/img/noavatar.jpg"
+                        }
+                        alt={review.reviewerDetails?.name || "Reviewer"}
+                        style={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          marginRight: 8,
+                        }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, fontSize: 15 }}>
+                          {review.reviewerDetails?.name || "Anonymous"}
+                          <span
+                            style={{
+                              color: "#888",
+                              fontWeight: 400,
+                              fontSize: 13,
+                              marginLeft: 8,
+                            }}
+                          >
+                            {review.reviewerDetails?.country
+                              ? `(${review.reviewerDetails.country})`
+                              : ""}
+                          </span>
+                          {/* Show delete button only if signed-in user is the reviewer */}
+                          {currentUser &&
+                            review.reviewer &&
+                            review.reviewer === currentUser._id && (
+                              <button
+                                style={{
+                                  marginLeft: 12,
+                                  background: "#ffeaea",
+                                  color: "#c0392b",
+                                  border: "1px solid #c0392b",
+                                  borderRadius: 4,
+                                  padding: "2px 10px",
+                                  fontSize: 13,
+                                  fontWeight: 500,
+                                  cursor:
+                                    deletingReviewId === review._id
+                                      ? "not-allowed"
+                                      : "pointer",
+                                  opacity:
+                                    deletingReviewId === review._id ? 0.7 : 1,
+                                }}
+                                disabled={deletingReviewId === review._id}
+                                onClick={() => handleDeleteReview(review._id)}
+                                title="Delete your review"
+                              >
+                                {deletingReviewId === review._id
+                                  ? "Deleting..."
+                                  : "Delete"}
+                              </button>
+                            )}
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            margin: "4px 0 8px 0",
+                          }}
+                        >
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                              key={star}
+                              style={{
+                                color:
+                                  star <= review.rating ? "#f1c40f" : "#ccc",
+                                fontSize: 16,
+                                marginRight: 2,
+                              }}
+                            >
+                              ★
+                            </span>
+                          ))}
+                          <span
+                            style={{
+                              color: "#555",
+                              fontSize: 13,
+                              marginLeft: 6,
+                            }}
+                          >
+                            {review.rating}/5
+                          </span>
+                          <span
+                            style={{
+                              color: "#aaa",
+                              fontSize: 12,
+                              marginLeft: 10,
+                            }}
+                          >
+                            {review.createdAt
+                              ? new Date(review.createdAt).toLocaleDateString()
+                              : ""}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: 15 }}>{review.comment}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* --- END REVIEWS SECTION --- */}
           </div>
         </div>
       )}
