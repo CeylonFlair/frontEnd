@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import api from "../../utils/api";
 import "./Messages.scss";
 
 const demoThreads = [
@@ -46,65 +47,187 @@ const demoUsers = [
 ];
 
 const Messages = () => {
-  const [threads, setThreads] = useState(demoThreads);
-  const [selectedThreadId, setSelectedThreadId] = useState(
-    threads[0]?.id || null
-  );
+  const [threads, setThreads] = useState([]);
+  const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [input, setInput] = useState("");
   const [showUserPicker, setShowUserPicker] = useState(false);
   const [file, setFile] = useState(null);
+  const [associatedUsers, setAssociatedUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [loadingThreads, setLoadingThreads] = useState(true);
   const fileInputRef = useRef();
+
+  // Get current user from localStorage
+  const currentUser = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user"));
+    } catch {
+      return null;
+    }
+  })();
+
+  // Fetch threads from API on mount
+  useEffect(() => {
+    const fetchThreads = async () => {
+      setLoadingThreads(true);
+      try {
+        const res = await api.get("/threads");
+        // Map API threads to local thread format
+        const mappedThreads = (res.data || []).map((thread) => {
+          // Get the other participant
+          const other = thread.participants.find(
+            (p) => p.id !== currentUser?._id
+          );
+          return {
+            id: thread._id,
+            name: other?.name || "Unknown",
+            profilePicture: other?.profilePicture,
+            lastMessage: "", // You may want to fetch last message separately
+            lastTime: "", // You may want to fetch last message time separately
+            unread: false,
+            messages: [],
+            participants: thread.participants,
+          };
+        });
+        setThreads(mappedThreads);
+        if (mappedThreads.length > 0) {
+          setSelectedThreadId(mappedThreads[0].id);
+        }
+      } catch {
+        setThreads([]);
+      }
+      setLoadingThreads(false);
+    };
+    fetchThreads();
+    // eslint-disable-next-line
+  }, []);
+
+  // Fetch associated users when user picker opens
+  const handleOpenUserPicker = async () => {
+    setShowUserPicker(true);
+    setLoadingUsers(true);
+    try {
+      let url = "orders/associated-users";
+      if (currentUser?.roles?.includes("artisan")) {
+        url = "orders/associated-users?role=artisan";
+      }
+      const res = await api.get(url);
+      setAssociatedUsers(res.data.associatedUsers || []);
+    } catch {
+      setAssociatedUsers([]);
+    }
+    setLoadingUsers(false);
+  };
 
   const selectedThread = threads.find((t) => t.id === selectedThreadId);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if ((!input.trim() && !file) || !selectedThread) return;
-    let newMsg = null;
+
+    const formData = new FormData();
+    formData.append("threadId", selectedThread.id);
+    formData.append("type", file ? "file" : "text");
+    formData.append("content", file ? file.name || "file" : input);
     if (file) {
-      // File message
-      newMsg = {
-        fromMe: true,
-        file: {
-          name: file.name,
-          url: URL.createObjectURL(file),
-          type: file.type,
-        },
-      };
-    } else {
-      // Text message
-      newMsg = { fromMe: true, text: input };
+      formData.append("file", file);
     }
-    setThreads((prev) =>
-      prev.map((t) =>
-        t.id === selectedThreadId
+
+    try {
+      const res = await api.post("/messages", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      // Assume response contains the new message object
+      const msg =
+        res.data?.message ||
+        (file
           ? {
-              ...t,
-              messages: [...t.messages, newMsg],
-              lastMessage: file ? `📎 ${file.name}` : input,
-              lastTime: "now",
+              fromMe: true,
+              file: {
+                name: file.name,
+                url: URL.createObjectURL(file),
+                type: file.type,
+              },
             }
-          : t
-      )
-    );
+          : { fromMe: true, text: input });
+
+      setThreads((prev) =>
+        prev.map((t) =>
+          t.id === selectedThreadId
+            ? {
+                ...t,
+                messages: [...t.messages, msg],
+                lastMessage: file ? `📎 ${file.name}` : input,
+                lastTime: "now",
+              }
+            : t
+        )
+      );
+    } catch (err) {
+      // fallback to local message if API fails
+      const msg = file
+        ? {
+            fromMe: true,
+            file: {
+              name: file.name,
+              url: URL.createObjectURL(file),
+              type: file.type,
+            },
+          }
+        : { fromMe: true, text: input };
+      setThreads((prev) =>
+        prev.map((t) =>
+          t.id === selectedThreadId
+            ? {
+                ...t,
+                messages: [...t.messages, msg],
+                lastMessage: file ? `📎 ${file.name}` : input,
+                lastTime: "now",
+              }
+            : t
+        )
+      );
+    }
     setInput("");
     setFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleAddThread = (user) => {
+  const handleAddThread = async (user) => {
     // Check if thread already exists
     const exists = threads.some((t) => t.name === user.name);
     if (!exists) {
-      const newThread = {
-        id: Math.random().toString(36).slice(2),
-        name: user.name,
-        lastMessage: "",
-        lastTime: "now",
-        unread: false,
-        messages: [],
-      };
-      setThreads((prev) => [newThread, ...prev]);
-      setSelectedThreadId(newThread.id);
+      const myId = currentUser?._id;
+      const participantIds = [myId, user.id];
+      try {
+        const res = await api.post("/threads/create", { participantIds });
+        const thread = res.data?.thread;
+        const other = thread.participants.find((p) => p.id !== myId);
+        const newThread = {
+          id: thread._id,
+          name: other?.name || user.name,
+          profilePicture: other?.profilePicture,
+          lastMessage: "",
+          lastTime: "",
+          unread: false,
+          messages: [],
+          participants: thread.participants,
+        };
+        setThreads((prev) => [newThread, ...prev]);
+        setSelectedThreadId(newThread.id);
+      } catch (err) {
+        // fallback to local thread if API fails
+        const newThread = {
+          id: Math.random().toString(36).slice(2),
+          name: user.name,
+          profilePicture: user.profilePicture,
+          lastMessage: "",
+          lastTime: "",
+          unread: false,
+          messages: [],
+        };
+        setThreads((prev) => [newThread, ...prev]);
+        setSelectedThreadId(newThread.id);
+      }
     } else {
       // Select existing thread
       const thread = threads.find((t) => t.name === user.name);
@@ -122,11 +245,49 @@ const Messages = () => {
           <button
             className="add-thread-btn"
             title="Start new chat"
-            onClick={() => setShowUserPicker(true)}
+            onClick={handleOpenUserPicker}
           >
             +
           </button>
         </div>
+        {/* Loading indicator for threads */}
+        {loadingThreads ? (
+          <div style={{ padding: 16, color: "#888", textAlign: "center" }}>
+            Loading conversations...
+          </div>
+        ) : (
+          threads.map((thread) => (
+            <div
+              key={thread.id}
+              className={`thread-item${
+                selectedThreadId === thread.id ? " selected" : ""
+              }${thread.unread ? " unread" : ""}`}
+              onClick={() => setSelectedThreadId(thread.id)}
+            >
+              <div
+                className="thread-name"
+                style={{ display: "flex", alignItems: "center", gap: 8 }}
+              >
+                {thread.profilePicture && (
+                  <img
+                    src={thread.profilePicture}
+                    alt={thread.name}
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      background: "#eee",
+                    }}
+                  />
+                )}
+                <span>{thread.name}</span>
+              </div>
+              <div className="thread-last-message">{thread.lastMessage}</div>
+              <div className="thread-last-time">{thread.lastTime}</div>
+            </div>
+          ))
+        )}
         {/* User Picker Modal */}
         {showUserPicker && (
           <div
@@ -138,15 +299,41 @@ const Messages = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="user-picker-title">Select user to chat</div>
-              {demoUsers.map((user) => (
-                <div
-                  key={user.id}
-                  className="user-picker-user"
-                  onClick={() => handleAddThread(user)}
-                >
-                  {user.name}
+              {loadingUsers ? (
+                <div style={{ padding: 12, color: "#888" }}>Loading...</div>
+              ) : associatedUsers.length === 0 ? (
+                <div style={{ padding: 12, color: "#888" }}>
+                  No users found.
                 </div>
-              ))}
+              ) : (
+                associatedUsers.map((user) => (
+                  <div
+                    key={user.id}
+                    className="user-picker-user"
+                    onClick={() =>
+                      handleAddThread({
+                        id: user.id,
+                        name: user.name,
+                        profilePicture: user.profilePicture,
+                      })
+                    }
+                    style={{ display: "flex", alignItems: "center", gap: 10 }}
+                  >
+                    <img
+                      src={user.profilePicture}
+                      alt={user.name}
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        background: "#eee",
+                      }}
+                    />
+                    <span>{user.name}</span>
+                  </div>
+                ))
+              )}
               <button
                 className="user-picker-cancel"
                 onClick={() => setShowUserPicker(false)}
@@ -156,19 +343,6 @@ const Messages = () => {
             </div>
           </div>
         )}
-        {threads.map((thread) => (
-          <div
-            key={thread.id}
-            className={`thread-item${
-              selectedThreadId === thread.id ? " selected" : ""
-            }${thread.unread ? " unread" : ""}`}
-            onClick={() => setSelectedThreadId(thread.id)}
-          >
-            <div className="thread-name">{thread.name}</div>
-            <div className="thread-last-message">{thread.lastMessage}</div>
-            <div className="thread-last-time">{thread.lastTime}</div>
-          </div>
-        ))}
       </div>
       {/* Chat Window */}
       <div className="chat-window">
