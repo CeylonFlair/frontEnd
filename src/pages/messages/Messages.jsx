@@ -67,19 +67,34 @@ const Messages = () => {
       try {
         const res = await api.get(`/threads/${selectedThreadId}/messages`);
         // Map API messages to local format
-        const mappedMessages = (res.data || []).map((msg) => ({
-          fromMe: msg.sender === currentUser?._id,
-          text: msg.type === "text" ? msg.content : undefined,
-          file:
-            msg.type === "file"
-              ? {
-                  name: msg.content,
-                  url: msg.url, // You may need to adjust this if your API returns file URLs differently
-                  type: msg.fileType || "",
-                }
-              : undefined,
-          createdAt: msg.createdAt,
-        }));
+        const mappedMessages = (res.data || []).map((msg) => {
+          if (msg.type === "text") {
+            return {
+              fromMe: msg.sender === currentUser?._id,
+              text: msg.content,
+              createdAt: msg.createdAt,
+              type: "text",
+            };
+          } else if (msg.type === "image" || msg.type === "file") {
+            return {
+              fromMe: msg.sender === currentUser?._id,
+              file: {
+                name: msg.fileName,
+                url: msg.fileUrl,
+                type: msg.type,
+              },
+              createdAt: msg.createdAt,
+              type: msg.type,
+            };
+          } else {
+            return {
+              fromMe: msg.sender === currentUser?._id,
+              text: msg.content,
+              createdAt: msg.createdAt,
+              type: msg.type,
+            };
+          }
+        });
         setThreads((prev) =>
           prev.map((t) =>
             t.id === selectedThreadId
@@ -139,7 +154,14 @@ const Messages = () => {
 
     const formData = new FormData();
     formData.append("threadId", selectedThread.id);
-    formData.append("type", file ? "file" : "text");
+    // Determine type based on file extension if file is present
+    let type = "text";
+    if (file) {
+      const ext = file.name.split(".").pop()?.toLowerCase();
+      const imageExts = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"];
+      type = imageExts.includes(ext) ? "image" : "file";
+    }
+    formData.append("type", type);
     formData.append("content", file ? file.name || "file" : input);
     if (file) {
       formData.append("file", file);
@@ -158,7 +180,7 @@ const Messages = () => {
               file: {
                 name: file.name,
                 url: URL.createObjectURL(file),
-                type: file.type,
+                type,
               },
             }
           : { fromMe: true, text: input });
@@ -183,7 +205,7 @@ const Messages = () => {
             file: {
               name: file.name,
               url: URL.createObjectURL(file),
-              type: file.type,
+              type,
             },
           }
         : { fromMe: true, text: input };
@@ -383,7 +405,7 @@ const Messages = () => {
                   >
                     {/* Show image, file, or text */}
                     {msg.file ? (
-                      msg.file.type.startsWith("image/") ? (
+                      msg.file.type === "image" ? (
                         <a
                           href={msg.file.url}
                           target="_blank"
@@ -392,8 +414,13 @@ const Messages = () => {
                         >
                           <img
                             src={msg.file.url}
-                            alt="sent"
+                            alt={msg.file.name || "sent"}
                             className="chat-image"
+                            style={{
+                              maxWidth: 200,
+                              maxHeight: 200,
+                              display: "block",
+                            }}
                           />
                         </a>
                       ) : (
