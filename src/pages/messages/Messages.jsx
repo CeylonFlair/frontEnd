@@ -122,13 +122,15 @@ const Messages = () => {
         border: "1px solid #eee",
         borderRadius: 8,
         overflow: "hidden",
+        maxWidth: 1000, // reduced width
+        margin: "32px auto", // center horizontally
       }}
     >
       {/* Thread List */}
       <div
         className="thread-list"
         style={{
-          width: 320,
+          width: 250, // reduced width
           borderRight: "1px solid #eee",
           background: "#fafafa",
           overflowY: "auto",
@@ -278,6 +280,7 @@ const Messages = () => {
           display: "flex",
           flexDirection: "column",
           background: "#fff",
+          minWidth: 0,
         }}
       >
         {selectedThread ? (
