@@ -2,50 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import api from "../../utils/api";
 import "./Messages.scss";
 
-const demoThreads = [
-  {
-    id: "1",
-    name: "Charley Sharp",
-    lastMessage: "Hey, are you available for a new project?",
-    lastTime: "1 hour ago",
-    unread: true,
-    messages: [
-      { fromMe: false, text: "Hey, are you available for a new project?" },
-      { fromMe: true, text: "Yes, I am!" },
-      { fromMe: false, text: "Great, I'll send you the details." },
-    ],
-  },
-  {
-    id: "2",
-    name: "John Doe",
-    lastMessage: "Can you send the invoice?",
-    lastTime: "2 hours ago",
-    unread: true,
-    messages: [
-      { fromMe: false, text: "Can you send the invoice?" },
-      { fromMe: true, text: "Sure, sending now." },
-    ],
-  },
-  {
-    id: "3",
-    name: "Elinor Good",
-    lastMessage: "Thank you!",
-    lastTime: "1 day ago",
-    unread: false,
-    messages: [
-      { fromMe: true, text: "Your order is complete." },
-      { fromMe: false, text: "Thank you!" },
-    ],
-  },
-];
-
-// Demo users to pick from
-const demoUsers = [
-  { id: "u1", name: "Alice Wonder" },
-  { id: "u2", name: "Bob Builder" },
-  { id: "u3", name: "Cathy Lane" },
-];
-
 const Messages = () => {
   const [threads, setThreads] = useState([]);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
@@ -55,6 +11,7 @@ const Messages = () => {
   const [associatedUsers, setAssociatedUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingThreads, setLoadingThreads] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const fileInputRef = useRef();
 
   // Get current user from localStorage
@@ -101,6 +58,62 @@ const Messages = () => {
     fetchThreads();
     // eslint-disable-next-line
   }, []);
+
+  // Fetch messages for selected thread
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (!selectedThreadId) return;
+      setLoadingMessages(true);
+      try {
+        const res = await api.get(`/threads/${selectedThreadId}/messages`);
+        // Map API messages to local format
+        const mappedMessages = (res.data || []).map((msg) => ({
+          fromMe: msg.sender === currentUser?._id,
+          text: msg.type === "text" ? msg.content : undefined,
+          file:
+            msg.type === "file"
+              ? {
+                  name: msg.content,
+                  url: msg.url, // You may need to adjust this if your API returns file URLs differently
+                  type: msg.fileType || "",
+                }
+              : undefined,
+          createdAt: msg.createdAt,
+        }));
+        setThreads((prev) =>
+          prev.map((t) =>
+            t.id === selectedThreadId
+              ? {
+                  ...t,
+                  messages: mappedMessages,
+                  lastMessage:
+                    mappedMessages.length > 0
+                      ? mappedMessages[mappedMessages.length - 1].text ||
+                        (mappedMessages[mappedMessages.length - 1].file
+                          ? `📎 ${
+                              mappedMessages[mappedMessages.length - 1].file
+                                .name
+                            }`
+                          : "")
+                      : "",
+                  lastTime:
+                    mappedMessages.length > 0
+                      ? new Date(
+                          mappedMessages[mappedMessages.length - 1].createdAt
+                        ).toLocaleString()
+                      : "",
+                }
+              : t
+          )
+        );
+      } catch {
+        // fallback: leave messages empty
+      }
+      setLoadingMessages(false);
+    };
+    fetchMessages();
+    // eslint-disable-next-line
+  }, [selectedThreadId]);
 
   // Fetch associated users when user picker opens
   const handleOpenUserPicker = async () => {
@@ -350,69 +363,85 @@ const Messages = () => {
           <>
             <div className="chat-header">{selectedThread.name}</div>
             <div className="chat-messages">
-              {selectedThread.messages.map((msg, idx) => (
+              {loadingMessages ? (
                 <div
-                  key={idx}
-                  className={`chat-message${msg.fromMe ? " from-me" : ""}`}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                    minHeight: 120,
+                  }}
                 >
-                  {/* Show image, file, or text */}
-                  {msg.file ? (
-                    msg.file.type.startsWith("image/") ? (
-                      <a
-                        href={msg.file.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="chat-image-link"
-                      >
-                        <img
-                          src={msg.file.url}
-                          alt="sent"
-                          className="chat-image"
-                        />
-                      </a>
-                    ) : (
-                      <a
-                        href={msg.file.url}
-                        download={msg.file.name}
-                        className="chat-file-link"
-                      >
-                        <span className="chat-file-icon">
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                          >
-                            <path
-                              d="M6 2V6C6 7.10457 6.89543 8 8 8H12C13.1046 8 14 7.10457 14 6V2"
-                              stroke="#7c3a3a"
-                              strokeWidth="1.5"
-                            />
-                            <rect
-                              x="4"
-                              y="2"
-                              width="12"
-                              height="16"
-                              rx="2"
-                              stroke="#7c3a3a"
-                              strokeWidth="1.5"
-                            />
-                            <path
-                              d="M8 13H12"
-                              stroke="#7c3a3a"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                            />
-                          </svg>
-                        </span>
-                        <span className="chat-file-name">{msg.file.name}</span>
-                      </a>
-                    )
-                  ) : (
-                    msg.text
-                  )}
+                  <span className="chat-spinner" />
                 </div>
-              ))}
+              ) : (
+                selectedThread.messages.map((msg, idx) => (
+                  <div
+                    key={idx}
+                    className={`chat-message${msg.fromMe ? " from-me" : ""}`}
+                  >
+                    {/* Show image, file, or text */}
+                    {msg.file ? (
+                      msg.file.type.startsWith("image/") ? (
+                        <a
+                          href={msg.file.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="chat-image-link"
+                        >
+                          <img
+                            src={msg.file.url}
+                            alt="sent"
+                            className="chat-image"
+                          />
+                        </a>
+                      ) : (
+                        <a
+                          href={msg.file.url}
+                          download={msg.file.name}
+                          className="chat-file-link"
+                        >
+                          <span className="chat-file-icon">
+                            <svg
+                              width="18"
+                              height="18"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                            >
+                              <path
+                                d="M6 2V6C6 7.10457 6.89543 8 8 8H12C13.1046 8 14 7.10457 14 6V2"
+                                stroke="#7c3a3a"
+                                strokeWidth="1.5"
+                              />
+                              <rect
+                                x="4"
+                                y="2"
+                                width="12"
+                                height="16"
+                                rx="2"
+                                stroke="#7c3a3a"
+                                strokeWidth="1.5"
+                              />
+                              <path
+                                d="M8 13H12"
+                                stroke="#7c3a3a"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                              />
+                            </svg>
+                          </span>
+                          <span className="chat-file-name">
+                            {msg.file.name}
+                          </span>
+                        </a>
+                      )
+                    ) : (
+                      msg.text
+                    )}
+                  </div>
+                ))
+              )}
             </div>
             <div className="chat-input">
               <div className="chat-input-area">
