@@ -136,12 +136,12 @@ function Navbar() {
                 src={
                   currentUser.profilePicture ||
                   currentUser.img ||
-                  "/img/noavatar.jpg"
+                  "/img/noProfile.png"
                 }
                 alt="Profile"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "/img/noavatar.jpg";
+                  e.target.src = "/img/noProfile.png";
                 }}
               />
               <span>{currentUser?.username || currentUser?.name}</span>
