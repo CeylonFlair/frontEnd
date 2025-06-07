@@ -114,56 +114,13 @@ const Messages = () => {
   };
 
   return (
-    <div
-      className="chat-app"
-      style={{
-        display: "flex",
-        height: "80vh",
-        border: "1px solid #eee",
-        borderRadius: 8,
-        overflow: "hidden",
-        maxWidth: 1000, // reduced width
-        margin: "32px auto", // center horizontally
-      }}
-    >
+    <div className="chat-app">
       {/* Thread List */}
-      <div
-        className="thread-list"
-        style={{
-          width: 250, // reduced width
-          borderRight: "1px solid #eee",
-          background: "#fafafa",
-          overflowY: "auto",
-        }}
-      >
-        <div
-          className="thread-list-header"
-          style={{
-            padding: "18px 20px",
-            borderBottom: "1px solid #eee",
-            fontWeight: 600,
-            fontSize: 20,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+      <div className="thread-list">
+        <div className="thread-list-header">
           <span>Messages</span>
           <button
-            style={{
-              background: "#7c3a3a",
-              color: "#fff",
-              border: "none",
-              borderRadius: "50%",
-              width: 32,
-              height: 32,
-              fontSize: 22,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 0,
-            }}
+            className="add-thread-btn"
             title="Start new chat"
             onClick={() => setShowUserPicker(true)}
           >
@@ -173,61 +130,25 @@ const Messages = () => {
         {/* User Picker Modal */}
         {showUserPicker && (
           <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100vw",
-              height: "100vh",
-              background: "rgba(0,0,0,0.25)",
-              zIndex: 1000,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            className="user-picker-modal-bg"
             onClick={() => setShowUserPicker(false)}
           >
             <div
-              style={{
-                background: "#fff",
-                borderRadius: 10,
-                padding: 24,
-                minWidth: 260,
-                boxShadow: "0 4px 24px rgba(44,62,80,0.12)",
-                position: "relative",
-              }}
+              className="user-picker-modal"
               onClick={(e) => e.stopPropagation()}
             >
-              <div style={{ fontWeight: 600, marginBottom: 16, fontSize: 17 }}>
-                Select user to chat
-              </div>
+              <div className="user-picker-title">Select user to chat</div>
               {demoUsers.map((user) => (
                 <div
                   key={user.id}
-                  style={{
-                    padding: "10px 0",
-                    borderBottom: "1px solid #f0f0f0",
-                    cursor: "pointer",
-                    fontSize: 15,
-                  }}
+                  className="user-picker-user"
                   onClick={() => handleAddThread(user)}
                 >
                   {user.name}
                 </div>
               ))}
               <button
-                style={{
-                  marginTop: 16,
-                  background: "#eee",
-                  color: "#7c3a3a",
-                  border: "none",
-                  borderRadius: 6,
-                  padding: "7px 18px",
-                  cursor: "pointer",
-                  fontWeight: 500,
-                  fontSize: 14,
-                  float: "right",
-                }}
+                className="user-picker-cancel"
                 onClick={() => setShowUserPicker(false)}
               >
                 Cancel
@@ -240,137 +161,89 @@ const Messages = () => {
             key={thread.id}
             className={`thread-item${
               selectedThreadId === thread.id ? " selected" : ""
-            }`}
-            style={{
-              padding: "16px 20px",
-              borderBottom: "1px solid #f0f0f0",
-              background:
-                selectedThreadId === thread.id ? "#f5eaea" : "#fafafa",
-              cursor: "pointer",
-              fontWeight: thread.unread ? 600 : 400,
-              color: thread.unread ? "#7c3a3a" : "#333",
-              transition: "background 0.15s",
-            }}
+            }${thread.unread ? " unread" : ""}`}
             onClick={() => setSelectedThreadId(thread.id)}
           >
-            <div style={{ fontSize: 16 }}>{thread.name}</div>
-            <div
-              style={{
-                fontSize: 13,
-                color: "#888",
-                marginTop: 2,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {thread.lastMessage}
-            </div>
-            <div style={{ fontSize: 12, color: "#bbb", marginTop: 2 }}>
-              {thread.lastTime}
-            </div>
+            <div className="thread-name">{thread.name}</div>
+            <div className="thread-last-message">{thread.lastMessage}</div>
+            <div className="thread-last-time">{thread.lastTime}</div>
           </div>
         ))}
       </div>
       {/* Chat Window */}
-      <div
-        className="chat-window"
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          background: "#fff",
-          minWidth: 0,
-        }}
-      >
+      <div className="chat-window">
         {selectedThread ? (
           <>
-            <div
-              className="chat-header"
-              style={{
-                padding: "18px 24px",
-                borderBottom: "1px solid #eee",
-                fontWeight: 600,
-                fontSize: 18,
-              }}
-            >
-              {selectedThread.name}
-            </div>
-            <div
-              className="chat-messages"
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                padding: "24px 24px 12px 24px",
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-              }}
-            >
+            <div className="chat-header">{selectedThread.name}</div>
+            <div className="chat-messages">
               {selectedThread.messages.map((msg, idx) => (
                 <div
                   key={idx}
-                  style={{
-                    alignSelf: msg.fromMe ? "flex-end" : "flex-start",
-                    background: msg.fromMe ? "#7c3a3a" : "#f3eaea",
-                    color: msg.fromMe ? "#fff" : "#7c3a3a",
-                    borderRadius: msg.fromMe
-                      ? "16px 16px 4px 16px"
-                      : "16px 16px 16px 4px",
-                    padding: "10px 16px",
-                    maxWidth: "70%",
-                    fontSize: 15,
-                    wordBreak: "break-word",
-                  }}
+                  className={`chat-message${msg.fromMe ? " from-me" : ""}`}
                 >
-                  {/* Show file or text */}
+                  {/* Show image, file, or text */}
                   {msg.file ? (
-                    <a
-                      href={msg.file.url}
-                      download={msg.file.name}
-                      style={{
-                        color: msg.fromMe ? "#fff" : "#7c3a3a",
-                        textDecoration: "underline",
-                        wordBreak: "break-all",
-                      }}
-                    >
-                      📎 {msg.file.name}
-                    </a>
+                    msg.file.type.startsWith("image/") ? (
+                      <a
+                        href={msg.file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="chat-image-link"
+                      >
+                        <img
+                          src={msg.file.url}
+                          alt="sent"
+                          className="chat-image"
+                        />
+                      </a>
+                    ) : (
+                      <a
+                        href={msg.file.url}
+                        download={msg.file.name}
+                        className="chat-file-link"
+                      >
+                        <span className="chat-file-icon">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                          >
+                            <path
+                              d="M6 2V6C6 7.10457 6.89543 8 8 8H12C13.1046 8 14 7.10457 14 6V2"
+                              stroke="#7c3a3a"
+                              strokeWidth="1.5"
+                            />
+                            <rect
+                              x="4"
+                              y="2"
+                              width="12"
+                              height="16"
+                              rx="2"
+                              stroke="#7c3a3a"
+                              strokeWidth="1.5"
+                            />
+                            <path
+                              d="M8 13H12"
+                              stroke="#7c3a3a"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        </span>
+                        <span className="chat-file-name">{msg.file.name}</span>
+                      </a>
+                    )
                   ) : (
                     msg.text
                   )}
                 </div>
               ))}
             </div>
-            <div
-              className="chat-input"
-              style={{
-                display: "flex",
-                borderTop: "1px solid #eee",
-                padding: 16,
-                gap: 12,
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
+            <div className="chat-input">
+              <div className="chat-input-area">
                 <textarea
-                  style={{
-                    flex: 1,
-                    borderRadius: 8,
-                    border: "1px solid #e7dede",
-                    padding: file ? "10px 70px 10px 10px" : "10px",
-                    fontSize: 15,
-                    resize: "none",
-                    minHeight: 38,
-                    maxHeight: 80,
-                  }}
+                  className="chat-textarea"
                   placeholder="Type a message"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -381,25 +254,12 @@ const Messages = () => {
                     }
                   }}
                   disabled={!!file}
+                  style={{
+                    padding: file ? "10px 70px 10px 10px" : undefined,
+                  }}
                 />
                 <button
-                  style={{
-                    position: "absolute",
-                    right: 8,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "#eee",
-                    color: "#7c3a3a",
-                    border: "none",
-                    borderRadius: 8,
-                    padding: "0 10px",
-                    fontWeight: 600,
-                    fontSize: 18,
-                    cursor: "pointer",
-                    height: 32,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
+                  className="chat-attach-btn"
                   onClick={() =>
                     fileInputRef.current && fileInputRef.current.click()
                   }
@@ -416,35 +276,10 @@ const Messages = () => {
                   onChange={(e) => setFile(e.target.files[0])}
                 />
                 {file && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      right: 44,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: 13,
-                      color: "#7c3a3a",
-                      background: "#f3eaea",
-                      borderRadius: 6,
-                      padding: "4px 8px",
-                      maxWidth: 120,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    title={file.name}
-                  >
+                  <span className="chat-file-preview" title={file.name}>
                     {file.name}
                     <button
-                      style={{
-                        marginLeft: 6,
-                        background: "none",
-                        border: "none",
-                        color: "#c0392b",
-                        cursor: "pointer",
-                        fontWeight: 700,
-                        fontSize: 13,
-                      }}
+                      className="chat-file-remove"
                       onClick={() => {
                         setFile(null);
                         if (fileInputRef.current)
@@ -459,26 +294,11 @@ const Messages = () => {
                 )}
               </div>
               <button
-                style={{
-                  background: "#7c3a3a",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 12,
-                  padding: "0 40px",
-                  fontWeight: 700,
-                  fontSize: 22,
-                  height: 54,
-                  minWidth: 110,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                className="chat-send-btn"
                 onClick={handleSend}
                 disabled={!input.trim() && !file}
                 aria-label="Send"
               >
-                {/* Arrow icon (right arrow) */}
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                   <path
                     d="M7 16H25"
@@ -498,9 +318,7 @@ const Messages = () => {
             </div>
           </>
         ) : (
-          <div style={{ padding: 32, color: "#888" }}>
-            Select a conversation
-          </div>
+          <div className="chat-empty">Select a conversation</div>
         )}
       </div>
     </div>
