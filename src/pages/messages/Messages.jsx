@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import api from "../../utils/api";
+import { io } from "socket.io-client";
 import "./Messages.scss";
 
 const Messages = () => {
@@ -13,6 +14,13 @@ const Messages = () => {
   const [loadingThreads, setLoadingThreads] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const fileInputRef = useRef();
+
+
+  var socket = io("http://localhost:5004" , {
+    auth: {
+      token: localStorage.getItem("token"),
+    },
+  });
 
   // Get current user from localStorage
   const currentUser = (() => {
