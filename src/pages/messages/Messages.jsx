@@ -16,16 +16,16 @@ const Messages = () => {
   const fileInputRef = useRef();
 
 
-  var socket = io("https://ceylonflair-backend-fed6708afb09.herokuapp.com:5004", {
-    auth: {
-      token: localStorage.getItem("token"),
-    },
-  });
-  // var socket = io("http://localhost:5004" , {
+  // var socket = io("https://ceylonflair-backend-fed6708afb09.herokuapp.com:5004", {
   //   auth: {
   //     token: localStorage.getItem("token"),
   //   },
   // });
+  var socket = io("http://localhost:5004" , {
+    auth: {
+      token: localStorage.getItem("token"),
+    },
+  });
 
   // Get current user from localStorage
   const currentUser = (() => {
