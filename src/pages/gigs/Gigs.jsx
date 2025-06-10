@@ -1,9 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./Gigs.scss";
 import GigCard from "../../components/gigCard/GigCard";
 import api from "../../utils/api";
 
 function Gigs() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [sort, setSort] = useState("newest");
   const [open, setOpen] = useState(false);
   const minRef = useRef();
@@ -18,22 +21,36 @@ function Gigs() {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
-  // Fetch listings with filters
+  // Combine the two useEffects to avoid double loading
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const kw = params.get("keyword") || "";
+    const min = params.get("minPrice") || "";
+    const max = params.get("maxPrice") || "";
+    const cat = params.get("category") || "";
+
+    // Update state with URL parameters
+    setKeyword(kw);
+    setSearchInput(kw);
+    setMinPrice(min);
+    setMaxPrice(max);
+    setCategory(cat);
+
+    // Make the API call with these parameters
     const fetchListings = async () => {
       setLoading(true);
       setError("");
       try {
-        const params = {};
-        if (category) params.category = category;
-        if (minPrice) params.minPrice = minPrice;
-        if (maxPrice) params.maxPrice = maxPrice;
-        if (sort) params.sort = sort;
-        if (keyword) params.keyword = keyword;
-        params.page = page;
-        params.limit = limit;
+        const apiParams = {};
+        if (cat) apiParams.category = cat;
+        if (min) apiParams.minPrice = min;
+        if (max) apiParams.maxPrice = max;
+        if (sort) apiParams.sort = sort;
+        if (kw) apiParams.keyword = kw;
+        apiParams.page = page;
+        apiParams.limit = limit;
 
-        const res = await api.get("/listings", { params });
+        const res = await api.get("/listings", { params: apiParams });
         setListings(res.data.listings || []);
       } catch (err) {
         setError(
@@ -45,8 +62,7 @@ function Gigs() {
       setLoading(false);
     };
     fetchListings();
-    // eslint-disable-next-line
-  }, [sort, category, keyword, page, limit, minPrice, maxPrice]);
+  }, [location.search, sort, page, limit]); // Dependencies include URL parameters and sort/pagination
 
   const reSort = (type) => {
     setSort(type);
@@ -58,11 +74,40 @@ function Gigs() {
     setMaxPrice(maxRef.current.value);
   };
 
+  // When category changes, update URL to trigger API call via location change
+  useEffect(() => {
+    // Skip on initial render or when category is empty (this prevents double API calls)
+    if (category === "" && !location.search.includes("category=")) return;
+
+    // Build URL with category and other existing params
+    const params = new URLSearchParams(location.search);
+    if (category) {
+      params.set("category", category);
+    } else {
+      params.delete("category");
+    }
+    navigate(`/gigs?${params.toString()}`, { replace: true });
+  }, [category, navigate, location.search]);
+
+  // Handle search form submission
   const handleSearch = (e) => {
     e.preventDefault();
-    setKeyword(searchInput);
-    setMinPrice(minRef.current.value);
-    setMaxPrice(maxRef.current.value);
+
+    // Build query params object
+    const params = new URLSearchParams();
+    if (searchInput.trim()) params.set("keyword", searchInput.trim());
+    if (minRef.current?.value) params.set("minPrice", minRef.current.value);
+    if (maxRef.current?.value) params.set("maxPrice", maxRef.current.value);
+    if (category) params.set("category", category);
+
+    // Navigate to update URL (which triggers API call via location change)
+    navigate(`/gigs?${params.toString()}`, { replace: true });
+  };
+
+  // Handle category change
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    // URL update is handled by the useEffect above
   };
 
   // Add controlled state for search input
@@ -82,6 +127,42 @@ function Gigs() {
     "Ceremonial Arts",
     "Educational Services",
   ];
+
+  // Add handler for resetting all filters
+  const handleResetFilters = () => {
+    // First clear all state values
+    setKeyword("");
+    setSearchInput("");
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
+    // Reset sort as well
+    setSort("newest");
+
+    // Clear the form references if they exist
+    if (minRef.current) minRef.current.value = "";
+    if (maxRef.current) maxRef.current.value = "";
+
+    // Clear URL parameters by navigating to base gigs page
+    navigate("/gigs", { replace: true });
+
+    // Force a re-fetch with no filters
+    const fetchListings = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get("/listings");
+        setListings(res.data.listings || []);
+      } catch (err) {
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Failed to load listings"
+        );
+      }
+      setLoading(false);
+    };
+    fetchListings();
+  };
 
   return (
     <div className="gigs">
@@ -103,7 +184,7 @@ function Gigs() {
             </span>
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={handleCategoryChange} // Use the new handler
               style={{
                 marginRight: 18,
                 minWidth: 180,
@@ -208,6 +289,25 @@ function Gigs() {
                 }}
               >
                 Search
+              </button>
+              {/* Add Reset button */}
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                style={{
+                  marginLeft: 8,
+                  padding: "7px 18px",
+                  borderRadius: 6,
+                  border: "1px solid #bf7e7e",
+                  background: "#fff",
+                  color: "#bf7e7e",
+                  fontWeight: 600,
+                  fontSize: 15,
+                  cursor: "pointer",
+                  boxShadow: "0 1px 4px #eee",
+                }}
+              >
+                Reset
               </button>
             </form>
           </div>
