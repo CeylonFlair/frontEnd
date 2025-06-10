@@ -8,7 +8,7 @@ function ProjectCard({ card }) {
       <div className="info">
         <img src={card.provider.profilePicture} alt="" />
         <div className="texts">
-          <h2>{card.category}</h2>
+          <h2>{card.title}</h2>
           <span>{card.provider.name}</span>
         </div>
       </div>
