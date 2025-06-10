@@ -118,7 +118,7 @@ function Navbar() {
           {/* <Link className="link" to="/">
           <span>CeylonFlair</span>
           </Link> */}
-          <Link className="link" to="/">
+          <Link className="link" to="/gigs">
             <span>Explore</span>
           </Link>
           <Link className="link" to="/">
