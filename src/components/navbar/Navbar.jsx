@@ -125,11 +125,11 @@ function Navbar() {
             <span>English</span>
           </Link> */}
 
-          {!currentUser?.isSeller && (
+          {/* {!currentUser?.isSeller && (
             <Link className="link" to="/">
               <span>Become a Seller</span>
             </Link>
-          )}
+          )} */}
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
               <img
