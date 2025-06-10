@@ -1,12 +1,25 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Footer.scss";
 
 function Footer() {
+  // Get current user from localStorage
+  const currentUser = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user"));
+    } catch {
+      return null;
+    }
+  })();
+
+  // Check if user is an artisan
+  const isArtisan = currentUser?.roles?.includes("artisan");
+
   return (
     <div className="footer">
       <div className="container">
         <div className="top">
-          <div className="item">
+          {/* <div className="item">
             <h2>Categories</h2>
             <span></span>
             <span>Handicraft Artwork</span>
@@ -17,25 +30,47 @@ function Footer() {
             <span>Traditional Instruments</span>
             <span>Ceremonial Arts</span>
             <span>Educational Services</span>
-          </div>
+          </div> */}
           <div className="item">
             <h2>Looking for Something?</h2>
-            <span>Become a Seller</span>
-            <span>Services</span>
-            <span>Messages</span>
-            <span>Terms of Service</span>
-            <span>Orders</span>
-            <span>Register</span>
+            <Link to="/register?seller=true" className="footer-link">
+              <span>Become a Seller</span>
+            </Link>
+            {isArtisan && (
+              <Link to="/mygigs" className="footer-link">
+                <span>Services</span>
+              </Link>
+            )}
+            <Link to="/messages" className="footer-link">
+              <span>Messages</span>
+            </Link>
+            <Link to="/terms" className="footer-link">
+              <span>Terms of Service</span>
+            </Link>
+            <Link to="/orders" className="footer-link">
+              <span>Orders</span>
+            </Link>
+            <Link to="/register" className="footer-link">
+              <span>Register</span>
+            </Link>
           </div>
-          
+
           <div className="item contact">
-  <h2>Contact</h2>
-  <p>The cupboard under the Stairs, 4, Privet Drive, <br />Little Whinging, Surrey, England</p>
-  <p><a href="tel:+13459971345">+1 345 99 71 345</a></p>
-  <p><a href="tel:+13457464975">+1 345 74 64 975</a></p>
-  <p><a href="mailto:info@ceylonflair.com">info@ceylonflair.com</a></p>
-</div>
-        
+            <h2>Contact</h2>
+            <p>
+              The cupboard under the Stairs, 4, Privet Drive, <br />
+              Little Whinging, Surrey, England
+            </p>
+            <p>
+              <a href="tel:+13459971345">+1 345 99 71 345</a>
+            </p>
+            <p>
+              <a href="tel:+13457464975">+1 345 74 64 975</a>
+            </p>
+            <p>
+              <a href="mailto:info@ceylonflair.com">info@ceylonflair.com</a>
+            </p>
+          </div>
         </div>
         <hr />
         <div className="bottom">
