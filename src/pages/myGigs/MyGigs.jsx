@@ -8,9 +8,11 @@ function MyGigs() {
     id: 1,
     username: "Anna",
     isSeller: true,
+    // role: "artisan", // Uncomment and set this if you want to test artisan logic
   };
 
   const [listings, setListings] = useState([]);
+  const [provider, setProvider] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -19,8 +21,24 @@ function MyGigs() {
       setLoading(true);
       setError("");
       try {
-        const res = await api.get("/listings");
-        setListings(res.data.listings || []);
+        let res;
+        // Use localStorage user if available for role/id
+        let user = currentUser;
+        try {
+          const stored = JSON.parse(localStorage.getItem("user"));
+          if (stored) user = stored;
+        } catch {}
+        if (user?.roles?.includes("artisan") || user?.role === "artisan") {
+          // Use a valid ObjectId for providerId (replace with actual logic)
+          const providerId = user._id || user.id || "684773b8ab352e75aaf79107"; // fallback to demo ObjectId
+          res = await api.get(`/listings/${providerId}/with-provider`);
+          setProvider(res.data.provider);
+          setListings(res.data.listings || []);
+        } else {
+          res = await api.get("/listings");
+          setProvider(null);
+          setListings(res.data.listings || []);
+        }
       } catch (err) {
         setError(
           err.response?.data?.message ||
@@ -50,8 +68,10 @@ function MyGigs() {
     <div className="myGigs">
       <div className="container">
         <div className="title">
-          <h1>{currentUser.isSeller ? "Gigs" : "Orders"}</h1>
-          {currentUser.isSeller && (
+          <h1>
+            {provider ? "My Gigs" : currentUser.isSeller ? "Gigs" : "Orders"}
+          </h1>
+          {(provider || currentUser.isSeller) && (
             <Link to="/add">
               <button>Add New Gig</button>
             </Link>
