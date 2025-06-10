@@ -91,7 +91,7 @@ function Home() {
         <div style={{ padding: 32 }}>Loading...</div>
       ) : Array.isArray(listings) && listings.length > 0 ? (
         <Slide
-          slidesToShow={Math.min(4, listings.length)}
+          slidesToShow={Math.min(6, listings.length)}
           arrowsScroll={Math.min(4, listings.length)}
         >
           {listings.map((listing) => (
