@@ -2,93 +2,93 @@ export const cards = [
   {
     id: 1,
     title: "Handicraft Artwork",
-    img: "../public/img/cat-artwork.jpg",
+    img: "/img/cat-artwork.jpg",
   },
   {
     id: 2,
     title: "Textile Creation",
-    img: "../public/img/cat-textile.jpg",
+    img: "/img/cat-textile.jpg",
   },
   {
     id: 3,
     title: "Home Decor",
-    img: "../public/img/cat-home.jpg",
+    img: "/img/cat-home.jpg",
   },
   {
     id: 4,
     title: "Jewelry & Accessories",
-    img: "../public/img/cat-jewelry.jpg",
+    img: "/img/cat-jewelry.jpg",
   },
   {
     id: 5,
     title: "Wellness & Beauty",
-   img: "../public/img/cat-beauty.jpg",
+   img: "/img/cat-beauty.jpg",
   },
   {
     id: 6,
     title: "Ceremonial Arts",
-    img: "../public/img/cat-ceremonial.jpg",
+    img: "/img/cat-ceremonial.jpg",
   },
   {
     id: 7,
     title: "Educational Services",
-    img: "../public/img/cat-educational.jpg",
+    img: "/img/cat-educational.jpg",
   },
 ];
 
 export const projects = [
   {
     id: 1,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     cat: "Handicraft art",
     username: "N. Nawarathne",
   },
   {
     id: 2,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     cat: "Handicraft art",
     username: "N. Nawarathne",
   },
   {
     id: 3,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     cat: "Handicraft art",
     username: "N. Nawarathne",
   },
   {
     id: 4,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     cat: "Handicraft art",
     username: "N. Nawarathne",
   },
   {
     id: 5,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     cat: "Handicraft art",
     username: "N. Nawarathne",
   },
   {
     id: 6,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     cat: "Handicraft art",
     username: "N. Nawarathne",
   },
   {
     id: 7,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     cat: "Handicraft art",
     username: "N. Nawarathne",
   },
   {
     id: 8,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1600",
     cat: "Handicraft art",
     username: "N. Nawarathne",
@@ -98,7 +98,7 @@ export const projects = [
 export const gigs = [
   {
     id: 1,
-    img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/720598/pexels-photo-720598.jpeg?auto=compress&cs=tinysrgb&w=1600",
     desc: "I will create custom jewelry based on your needs",
     price: 59,
@@ -107,7 +107,7 @@ export const gigs = [
   },
   {
     id: 2,
-     img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/720598/pexels-photo-720598.jpeg?auto=compress&cs=tinysrgb&w=1600",
     desc: "I will create custom jewelry based on your needs",
     price: 59,
@@ -116,7 +116,7 @@ export const gigs = [
   },
   {
     id: 3,
-     img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/720598/pexels-photo-720598.jpeg?auto=compress&cs=tinysrgb&w=1600",
     desc: "I will create custom jewelry based on your needs",
     price: 59,
@@ -125,7 +125,7 @@ export const gigs = [
   },
   {
     id: 4,
-     img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/720598/pexels-photo-720598.jpeg?auto=compress&cs=tinysrgb&w=1600",
     desc: "I will create custom jewelry based on your needs",
     price: 59,
@@ -134,7 +134,7 @@ export const gigs = [
   },
   {
     id: 5,
-     img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/720598/pexels-photo-720598.jpeg?auto=compress&cs=tinysrgb&w=1600",
     desc: "I will create custom jewelry based on your needs",
     price: 59,
@@ -143,7 +143,7 @@ export const gigs = [
   },
   {
     id: 6,
-     img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/720598/pexels-photo-720598.jpeg?auto=compress&cs=tinysrgb&w=1600",
     desc: "I will create custom jewelry based on your needs",
     price: 59,
@@ -151,7 +151,7 @@ export const gigs = [
     username: "J. Rathnayake",
   },
   {
-     img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/720598/pexels-photo-720598.jpeg?auto=compress&cs=tinysrgb&w=1600",
     desc: "I will create custom jewelry based on your needs",
     price: 59,
@@ -159,7 +159,7 @@ export const gigs = [
     username: "J. Rathnayake",
   },
   {
-     img: "../../public/img/testimg.jpg",
+    img: "/img/testimg.jpg",
     pp: "https://images.pexels.com/photos/720598/pexels-photo-720598.jpeg?auto=compress&cs=tinysrgb&w=1600",
     desc: "I will create custom jewelry based on your needs",
     price: 59,

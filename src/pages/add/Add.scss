@@ -48,5 +48,72 @@
         }
       }
     }
+
+    .features-input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      input {
+        flex: 1;
+      }
+      .add-feature-btn {
+        padding: 0 12px;
+        font-size: 20px;
+        background: #f3eaea;
+        color: #7c3a3a;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.15s;
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+        &:not(:disabled):hover {
+          background: #e5d2d2;
+        }
+      }
+    }
+
+    .features-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .feature-chip {
+      display: inline-flex;
+      align-items: center;
+      background: #f3eaea;
+      color: #7c3a3a;
+      border-radius: 16px;
+      padding: 4px 12px 4px 10px;
+      font-size: 15px;
+      font-weight: 500;
+      .remove-feature-btn {
+        color: #c0392b;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        margin-left: 6px;
+        font-size: 13px;
+        line-height: 1;
+        padding: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.15s;
+        &:hover {
+          color: #a93226;
+        }
+      }
+    }
   }
 }

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const GigCard = ({ item }) => {
   return (
-    <Link to="/gig/123" className="link">
+    <Link to={`/gig/${item._id}`} className="link">
       <div className="gigCard">
         <img src={item.img} alt="" />
         <div className="info">
@@ -12,7 +12,7 @@ const GigCard = ({ item }) => {
             <img src={item.pp} alt="" />
             <span>{item.username}</span>
           </div>
-          <p>{item.desc}</p>
+          <p>{item.title}</p>
           <div className="star">
             <img src="./img/star.png" alt="" />
             <span>{item.star}</span>
@@ -23,10 +23,7 @@ const GigCard = ({ item }) => {
           <img src="./img/heart.png" alt="" />
           <div className="price">
             <span>STARTING AT</span>
-            <h2>
-              $ {item.price}
-              <sup>99</sup>
-            </h2>
+            <h2>LKR {item.price}</h2>
           </div>
         </div>
       </div>

@@ -25,12 +25,26 @@
       label {
         color: gray;
         font-size: 18px;
+        margin-bottom: 2px; // Reduce space below all labels
       }
 
+      select,
       input,
       textarea {
         padding: 20px;
         border: 1px solid rgb(216, 214, 214);
+        font-size: 18px;
+        background: #fff;
+        color: #333;
+        outline: none;
+        box-sizing: border-box;
+        transition: border 0.2s;
+      }
+
+      select:focus,
+      input:focus,
+      textarea:focus {
+        border: 1.5px solid #bf7e7e;
       }
 
       button {
@@ -41,6 +55,13 @@
         font-size: 18px;
         background-color: #bf7e7e;
         cursor: pointer;
+      }
+
+      .register-btn-disabled {
+        background-color: #ccc !important;
+        color: #666 !important;
+        cursor: not-allowed !important;
+        border: 1px solid #aaa !important;
       }
 
       .toggle {
@@ -101,6 +122,40 @@
           -ms-transform: translateX(26px);
           transform: translateX(26px);
         }
+      }
+
+      // Specific style for the phone number row
+      .phone-row {
+        display: flex;
+        gap: 8px;
+        position: relative;
+        margin-top: 0; // Remove extra space above phone-row
+      }
+
+      .country-code-select {
+        width: 110px;
+        min-width: 110px;
+        max-width: 140px;
+        padding-right: 30px;
+        height: 60px;
+        font-size: 18px;
+        background: #fff;
+        color: #333;
+        box-sizing: border-box;
+        overflow: visible;
+        text-overflow: ellipsis;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 20px 20px;
+      }
+
+      .phone-input {
+        flex: 1;
+        height: 60px;
       }
     }
   }
