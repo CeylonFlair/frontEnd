@@ -208,7 +208,9 @@ function Navbar() {
             </Link>
             <Link
               className="link menuLink"
-              to={`/gigs?category=${encodeURIComponent("Jewelry & Accessories")}`}
+              to={`/gigs?category=${encodeURIComponent(
+                "Jewelry & Accessories"
+              )}`}
             >
               Jewelry & Accessories
             </Link>
@@ -226,7 +228,9 @@ function Navbar() {
             </Link>
             <Link
               className="link menuLink"
-              to={`/gigs?category=${encodeURIComponent("Educational Services")}`}
+              to={`/gigs?category=${encodeURIComponent(
+                "Educational Services"
+              )}`}
             >
               Educational Services
             </Link>
