@@ -46,7 +46,7 @@ function Featured() {
             </div>
             <button onClick={handleSearchClick}>Search</button>
           </div>
-          <div className="popular">
+          {/* <div className="popular">
             <span>Popular:</span>
             <button onClick={() => navigate("/gigs?keyword=Handloom clothes")}>
               Handloom clothes
@@ -60,7 +60,7 @@ function Featured() {
             <button onClick={() => navigate("/gigs?keyword=Crotchet")}>
               Crotchet
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div className="right">

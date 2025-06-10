@@ -188,29 +188,47 @@ function Navbar() {
         <>
           <hr />
           <div className="menu">
-            <Link className="link menuLink" to="/">
+            <Link
+              className="link menuLink"
+              to={`/gigs?category=${encodeURIComponent("Handicraft Artwork")}`}
+            >
               Handicraft Artwork
             </Link>
-            <Link className="link menuLink" to="/">
-              Textile
+            <Link
+              className="link menuLink"
+              to={`/gigs?category=${encodeURIComponent("Textile Creation")}`}
+            >
+              Textile Creation
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link
+              className="link menuLink"
+              to={`/gigs?category=${encodeURIComponent("Home Decor")}`}
+            >
               Home Decor
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link
+              className="link menuLink"
+              to={`/gigs?category=${encodeURIComponent("Jewelry & Accessories")}`}
+            >
               Jewelry & Accessories
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link
+              className="link menuLink"
+              to={`/gigs?category=${encodeURIComponent("Wellness & Beauty")}`}
+            >
               Wellness & Beauty
             </Link>
-            <Link className="link menuLink" to="/">
-              Traditional Instruments
-            </Link>
-            <Link className="link menuLink" to="/">
+            <Link
+              className="link menuLink"
+              to={`/gigs?category=${encodeURIComponent("Ceremonial Arts")}`}
+            >
               Ceremonial Arts
             </Link>
-            <Link className="link menuLink" to="/">
-              Handicraft Educational Services
+            <Link
+              className="link menuLink"
+              to={`/gigs?category=${encodeURIComponent("Educational Services")}`}
+            >
+              Educational Services
             </Link>
           </div>
           <hr />

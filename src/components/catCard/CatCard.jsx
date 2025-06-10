@@ -1,18 +1,22 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./CatCard.scss";
 
 function CatCard({ card }) {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    // Navigate to gigs page with the category as a query parameter
+    navigate(`/gigs?category=${encodeURIComponent(card.title)}`);
+  };
+
   return (
-    
-    <Link to="/gigs?cat=design">
-      <div className="catCard">
-        <img src={card.img} alt="" />
-        <span className="desc">{card.desc}</span>
-        <span className="title">{card.title}</span>
-      </div>
-    </Link>
-    
+    <div className="catCard" onClick={handleCardClick}>
+      <img src={card.img} alt="" />
+      <span className="desc">{card.desc}</span>
+      <span className="title">{card.title}</span>
+    </div>
   );
 }
+
 export default CatCard;
