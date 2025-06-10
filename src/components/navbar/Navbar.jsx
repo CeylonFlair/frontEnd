@@ -121,9 +121,9 @@ function Navbar() {
           <Link className="link" to="/gigs">
             <span>Explore</span>
           </Link>
-          <Link className="link" to="/">
+          {/* <Link className="link" to="/">
             <span>English</span>
-          </Link>
+          </Link> */}
 
           {!currentUser?.isSeller && (
             <Link className="link" to="/">
