@@ -74,27 +74,35 @@ function Gigs() {
             )}
           </div>
         </div>
-        <div className="cards">
+        <div
+          className="cards"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "24px",
+          }}
+        >
           {loading ? (
             <div style={{ padding: 32 }}>Loading...</div>
           ) : error ? (
             <div style={{ color: "#c0392b", padding: 32 }}>{error}</div>
           ) : Array.isArray(listings) && listings.length > 0 ? (
             listings.map((gig) => (
-              <GigCard
-                key={gig._id}
-                item={{
-                  ...gig,
-                  star: gig.rating ,
-                  img: gig.coverImage || (gig.images && gig.images[0]) || "",
-                  pp:
-                    (gig.provider && gig.provider.profilePicture) ||
-                    (gig.provider && gig.provider.profile_picture) ||
-                    (gig.provider && gig.provider.img) ||
-                    "/img/noavatar.jpg",
-                  username: gig.provider?.name || "",
-                }}
-              />
+              <div key={gig._id} style={{ minWidth: 0 }}>
+                <GigCard
+                  item={{
+                    ...gig,
+                    star: gig.rating,
+                    img: gig.coverImage || (gig.images && gig.images[0]) || "",
+                    pp:
+                      (gig.provider && gig.provider.profilePicture) ||
+                      (gig.provider && gig.provider.profile_picture) ||
+                      (gig.provider && gig.provider.img) ||
+                      "/img/noavatar.jpg",
+                    username: gig.provider?.name || "",
+                  }}
+                />
+              </div>
             ))
           ) : (
             <div style={{ padding: 32, color: "#888" }}>No gigs found.</div>
