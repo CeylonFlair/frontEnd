@@ -398,7 +398,7 @@ const Orders = () => {
                 <th>Payment Status</th>
                 <th>Order Status</th>
                 <th>{partyLabel}</th>
-                <th>Contact</th>
+                {/* Removed Contact column */}
                 {/* Only show Review column if not artisan */}
                 {!currentUser?.roles?.includes("artisan") && <th>Review</th>}
               </tr>
@@ -456,6 +456,26 @@ const Orders = () => {
                           order.paymentStatus.slice(1)
                         : "N/A"}
                     </span>
+                    {/* Add Pay Again button for failed or pending payments */}
+                    {(order.paymentStatus === "failed" ||
+                      order.paymentStatus === "pending") && (
+                      <button
+                        style={{
+                          background: "#4a9e5f",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "4px",
+                          padding: "4px 12px",
+                          cursor: "pointer",
+                          fontWeight: 500,
+                          fontSize: "13px",
+                          marginLeft: "8px",
+                        }}
+                        onClick={() => navigate(`/pay/${order._id}`)}
+                      >
+                        Pay Again
+                      </button>
+                    )}
                   </td>
                   <td>
                     {currentUser?.roles?.includes("artisan") ? (
@@ -516,9 +536,7 @@ const Orders = () => {
                       ? order.customer?.name
                       : order.provider?.name}
                   </td>
-                  <td>
-                    <img className="message" src="./img/message.png" alt="" />
-                  </td>
+                  {/* Removed Contact cell */}
                   {/* Only show Review cell if not artisan */}
                   {!currentUser?.roles?.includes("artisan") && (
                     <td>
